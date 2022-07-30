@@ -1,0 +1,90 @@
+<div class="container">
+   
+    <div class="mt10 pl10 pr9" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="flex-end">
+    
+    <mat-form-field>
+     <mat-placeholder>Search</mat-placeholder>
+     <input matInput type="search" [(ngModel)]="searchValue">
+     <button mat-icon-button matSuffix color="primary" aria-label="search">
+       <mat-icon>search</mat-icon>
+     </button>
+   </mat-form-field>
+   <button mat-flat-button color="primary" class="createBtn" (click)="openDialog(null)">Create<mat-icon>add</mat-icon></button>
+ 
+   </div>
+   
+   <table mat-table  [dataSource]="projectCategories" #myTable class="my-table mat-elevation-z8">
+ 
+     <!-- Position Column -->
+     <ng-container matColumnDef="name">
+       <th mat-header-cell *matHeaderCellDef> Name </th>
+       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+     </ng-container>
+ 
+     <!-- Name Column -->
+     <ng-container matColumnDef="mobile">
+       <th mat-header-cell *matHeaderCellDef> Description </th>
+       <td mat-cell *matCellDef="let element"> {{element.desc}} </td>
+     </ng-container>
+
+
+
+     <!-- Action Column-->
+   <ng-container matColumnDef="action">
+     <th mat-header-cell *matHeaderCellDef > Actions </th>
+     <td mat-cell *matCellDef="let element"> 
+       <button mat-icon-button matTooltip="Click to Edit" (click)="openDialog(element)" class="iconbutton" color="accent" >
+         <mat-icon>edit</mat-icon>
+       </button>
+
+       <button mat-icon-button matTooltip="Click to delete" (click)="delete(element)" class="iconbutton" color="warn" >
+         <mat-icon>delete</mat-icon>
+       </button> 
+     </td>
+     </ng-container>
+ 
+     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+   </table>
+ 
+   <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                  showFirstLastButtons 
+                  aria-label="Select page of periodic elements">
+   </mat-paginator>
+ </div>
+
+<ng-template #orgModal>
+   <h2 mat-dialog-title class="text-center">PROJECT CATEGORY</h2>
+
+<mat-dialog-content [formGroup]="form">
+ 
+ <mat-form-field class="full-width">
+     
+   <input id="nameInput" matInput placeholder="Name" formControlName="name" autocomplete="name"
+   type="name">
+   <mat-error  *ngIf="form.controls['name'].hasError('required')">
+     Name is
+     <strong>required</strong>
+ </mat-error>
+           
+ </mat-form-field>
+
+ <mat-form-field class="full-width">
+     
+   <input id="mobileInput" matInput placeholder="Description" formControlName="desc" autocomplete="mobile"
+   type="string">
+   <mat-error  *ngIf="form.controls['desc'].hasError('required')">
+     Description is
+     <strong>required</strong>
+ </mat-error>  
+ </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutGap="10Px" fxLayoutAlign="flex-end">
+   <button class="mat-raised-button mat-accent"(click)="close()">Close</button>
+   <button class="mat-raised-button mat-primary"(click)="save()" [disabled]="(form.invalid)"  >Save</button>
+</mat-dialog-actions>
+ 
+ </ng-template>
+ 
