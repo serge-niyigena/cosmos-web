@@ -17,7 +17,7 @@ import { ProjectStatusService } from '../project-status.service';
 })
 export class ProjectStatusComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'descrition','action'];
+  displayedColumns: string[] = ['name', 'desc','action'];
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('orgModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;

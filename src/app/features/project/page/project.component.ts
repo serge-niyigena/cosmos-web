@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-icons',
-  templateUrl: './icons.component.html',
-  styleUrls: ['./icons.component.css']
+  templateUrl: './project.component.html',
+  styleUrls: ['./project.component.css']
 })
 export class ProjectComponent {
 

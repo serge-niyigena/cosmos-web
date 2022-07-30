@@ -18,7 +18,7 @@ import { ProjectCategoryService } from '../project-category.service';
 export class ProjectCategoryComponent implements OnInit {
 
   
-  displayedColumns: string[] = ['name', 'descrition','action'];
+  displayedColumns: string[] = ['name', 'desc','action'];
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('orgModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;

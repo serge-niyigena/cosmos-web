@@ -64,7 +64,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'users',
-    loadChildren: () => import('./features/users/users.module').then(m => m.UsersModule),
+    loadChildren: () => import('./features/users/module/users.module').then(m => m.UsersModule),
     canActivate: [AuthGuard]
   },
   {
@@ -74,7 +74,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'icons',
-    loadChildren: () => import('./features/icons/icons.module').then(m => m.IconsModule),
+    loadChildren: () => import('./features/project/module/project.module').then(m => m.ProjectModule),
     canActivate: [AuthGuard]
   },
   {

@@ -84,11 +84,37 @@
 
         <mat-expansion-panel [class.mat-elevation-z0]="true" dense>
           <mat-expansion-panel-header>
-              Preference
+              Setups
           </mat-expansion-panel-header>
           <mat-nav-list dense>
-              <a mat-list-item routerLink="#"><mat-icon>attach_money</mat-icon>Billing</a>
-              <a mat-list-item routerLink="#"><mat-icon>notification_important</mat-icon>Notification</a>
+            <a mat-list-item [routerLink]="['/item-types']">
+              <mat-icon mat-list-icon>person</mat-icon><p mat-line> Item types </p>
+            </a>
+
+            <a mat-list-item [routerLink]="['/item-categories']">
+              <mat-icon mat-list-icon>category</mat-icon><p mat-line> Item categories </p>
+            </a>
+
+            <a mat-list-item [routerLink]="['/project-categories']">
+              <mat-icon mat-list-icon>category</mat-icon><p mat-line> project categories </p>
+            </a>
+
+            <a mat-list-item [routerLink]="['/project-status']">
+              <mat-icon mat-list-icon>person</mat-icon><p mat-line> project statuses </p>
+            </a>
+
+            <a mat-list-item [routerLink]="['/usage-status']">
+              <mat-icon mat-list-icon>signal_wifi</mat-icon><p mat-line> usage statuses </p>
+            </a>
+
+            <a mat-list-item [routerLink]="['/unit-type']">
+              <mat-icon mat-list-icon>person</mat-icon><p mat-line> unit types </p>
+            </a>
+
+            <a mat-list-item [routerLink]="['/user-type']">
+              <mat-icon mat-list-icon>person</mat-icon><p mat-line> user types </p>
+            </a>
+
           </mat-nav-list>
       </mat-expansion-panel>
 
@@ -130,7 +156,7 @@
           <p mat-line> Material Components </p>
         </a>
 
-        <a id="push-bottom" mat-list-item [routerLink]="['/about']" routerLinkActive="active">
+        <a  mat-list-item [routerLink]="['/about']" routerLinkActive="active">
           <mat-icon mat-list-icon>
             info_outline
           </mat-icon>

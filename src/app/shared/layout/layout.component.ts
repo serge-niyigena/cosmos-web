@@ -56,4 +56,9 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit(): void {
         this.changeDetectorRef.detectChanges();
     }
+
+    // const menuItems=[
+
+    // ];
+
 }

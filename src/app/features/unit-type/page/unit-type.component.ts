@@ -18,7 +18,7 @@ import { UnitTypeService } from '../unit-type.service';
 export class UnitTypeComponent implements OnInit {
 
  
-  displayedColumns: string[] = ['name', 'descrition','action'];
+  displayedColumns: string[] = ['name', 'desc','action'];
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('orgModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;

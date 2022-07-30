@@ -17,7 +17,7 @@ import { ItemCategoryService } from '../item-category.service';
 })
 export class ItemCategoryComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'descrition','action'];
+  displayedColumns: string[] = ['name', 'desc','action'];
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('orgModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -89,7 +89,7 @@ export class ItemCategoryComponent implements OnInit {
   }
 
   close(){
-    this.paginator.pageSize=this.pageInfo.pageSize;
+    
     this.dialog.closeAll();
     this.myTable.renderRows();
     this.initiateForm();

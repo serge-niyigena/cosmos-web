@@ -17,7 +17,7 @@ import { UserTypeService } from '../../user-type.service';
 })
 export class UserTypeComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'descrition','action'];
+  displayedColumns: string[] = ['name', 'desc','action'];
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('orgModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
