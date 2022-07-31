@@ -21,6 +21,12 @@ export class UserService {
     
   }
 
+  getAllUsersList():Observable<any[]>  {
+
+    return this.http.get<any>( `${this.baseUrl}/user/all`);
+    
+  }
+
   createUser(user:UserSendDTO){
     return this.http.post(`${this.baseUrl}/createUser`,user);
   }

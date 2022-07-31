@@ -90,7 +90,7 @@ export class UnitTypeComponent implements OnInit {
   }
 
   close(){
-    this.paginator.pageSize=this.pageInfo.pageSize;
+
     this.dialog.closeAll();
     this.myTable.renderRows();
     this.initiateForm();

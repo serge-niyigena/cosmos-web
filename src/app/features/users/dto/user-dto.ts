@@ -1,7 +1,7 @@
-import { ProjectDTO } from "../../project/dto/project-dto";
+import { ProjectDataDTO } from "../../project/dto/project-data-dto";
+import { RoleDTO } from "../../roles/dto/role-dto";
 import { UserTypeDTO } from "../../user-type/dto/user-type-dto";
 import { UserGroupDTO } from "./user-groupDTO";
-import { UserRoleDTO } from "./user-role-dto";
 
 export class UserDTO {
 
@@ -11,8 +11,8 @@ export class UserDTO {
     userEmail: string;
     userType: UserTypeDTO;
     groups: UserGroupDTO[];
-    roles: UserRoleDTO[];
-    projects: ProjectDTO[];
+    roles: RoleDTO[];
+    projects: ProjectDataDTO[];
     userStatus: string;
     userReset: string;
     

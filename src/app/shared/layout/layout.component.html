@@ -68,25 +68,56 @@
           <p mat-line> Dashboard </p>
         </a>
 
-        <a mat-list-item [routerLink]="['/customers']" routerLinkActive="active">
+
+        <a mat-list-item [routerLink]="['/project']" routerLinkActive="active">
+          <mat-icon mat-list-icon>
+            toll
+          </mat-icon>
+          <p mat-line> Project </p>
+        </a>
+
+        <a mat-list-item [routerLink]="['/project-floor']" routerLinkActive="active">
           <mat-icon mat-list-icon>
             business
           </mat-icon>
-          <p mat-line> Customers </p>
+          <p mat-line> Project floors </p>
         </a>
 
-        <a mat-list-item [routerLink]="['/organizations']" routerLinkActive="active">
+        <a mat-list-item [routerLink]="['/item']" routerLinkActive="active">
           <mat-icon mat-list-icon>
-            business
+            item
           </mat-icon>
-          <p mat-line> Organizations </p>
+          <p mat-line> Items </p>
         </a>
 
-        <mat-expansion-panel [class.mat-elevation-z0]="true" dense>
+
+        <mat-expansion-panel [class.mat-elevation-z0]="true"  dense>
           <mat-expansion-panel-header>
               Setups
           </mat-expansion-panel-header>
           <mat-nav-list dense>
+
+            <a mat-list-item [routerLink]="['/organizations']" routerLinkActive="active">
+              <mat-icon mat-list-icon>
+                business
+              </mat-icon>
+              <p mat-line> Organizations </p>
+            </a>
+
+            <a mat-list-item [routerLink]="['/users']" routerLinkActive="active">
+              <mat-icon mat-list-icon>
+                people
+              </mat-icon>
+              <p mat-line> Users </p>
+            </a>
+
+            <a mat-list-item [routerLink]="['/groups']" routerLinkActive="active">
+              <mat-icon mat-list-icon>
+                group
+              </mat-icon>
+              <p mat-line> Groups </p>
+            </a>
+
             <a mat-list-item [routerLink]="['/item-types']">
               <mat-icon mat-list-icon>person</mat-icon><p mat-line> Item types </p>
             </a>
@@ -115,15 +146,16 @@
               <mat-icon mat-list-icon>person</mat-icon><p mat-line> user types </p>
             </a>
 
+            <a mat-list-item [routerLink]="['/roles']" routerLinkActive="active">
+              <mat-icon mat-list-icon>
+                font_download
+              </mat-icon>
+              <p mat-line> Roles </p>
+            </a>
+
           </mat-nav-list>
       </mat-expansion-panel>
 
-        <a mat-list-item [routerLink]="['/users']" routerLinkActive="active">
-          <mat-icon mat-list-icon>
-            people
-          </mat-icon>
-          <p mat-line> Users </p>
-        </a>
 
         <a mat-list-item [routerLink]="['/account/profile']">
           <mat-icon mat-list-icon>person</mat-icon>
@@ -134,27 +166,7 @@
           <mat-icon mat-list-icon>exit_to_app</mat-icon>
           <p mat-line> Log out </p>
         </a>
-
-
-        <a mat-list-item [routerLink]="['/icons']" routerLinkActive="active">
-          <mat-icon mat-list-icon>
-            toll
-          </mat-icon>
-          <p mat-line> Icons </p>
-        </a>
-        <a mat-list-item [routerLink]="['/typography']" routerLinkActive="active">
-          <mat-icon mat-list-icon>
-            font_download
-          </mat-icon>
-          <p mat-line> Typography </p>
-        </a>
-
-        <a mat-list-item href="https://material.angular.io/components/categories" target="_blank">
-          <mat-icon mat-list-icon>
-            link
-          </mat-icon>
-          <p mat-line> Material Components </p>
-        </a>
+        
 
         <a  mat-list-item [routerLink]="['/about']" routerLinkActive="active">
           <mat-icon mat-list-icon>

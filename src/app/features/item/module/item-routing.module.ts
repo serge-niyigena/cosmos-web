@@ -1,21 +1,27 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ItemComponent } from '../page/item.component';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from 'src/app/shared/layout/layout.component';
 
-import { CustomerListComponent } from './customer-list/customer-list.component';
+
+
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', component: CustomerListComponent },
+      { path: '', component: ItemComponent },
     ]
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports:[RouterModule],
+  imports: [
+    RouterModule.forChild(routes),
+    RouterModule
+  ]
 })
-export class CustomersRoutingModule { }
+export class ItemRoutingModule { }

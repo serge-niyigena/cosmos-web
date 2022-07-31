@@ -1,0 +1,41 @@
+<div class="container" fxLayout="row" fxLayoutAlign="center none">
+    <div fxFlex="95%">
+  
+      <mat-card>
+        <mat-card-content>
+          <h2>Roles</h2>
+  
+          <div class="container">
+           
+              <table mat-table  [dataSource]="rolesList" #myTable class="my-table mat-elevation-z8">
+            
+                <!-- Position Column -->
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.roleName}} </td>
+                </ng-container>
+            
+
+                <ng-container matColumnDef="desc">
+                    <th mat-header-cell *matHeaderCellDef> Description </th>
+                    <td mat-cell *matCellDef="let element"> {{element.roleDesc}} </td>
+                  </ng-container>
+          
+  
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                             
+                             
+                             showFirstLastButtons 
+                             aria-label="Select page of periodic elements">
+              </mat-paginator>
+            </div>
+          
+        </mat-card-content>
+      </mat-card>
+  
+    </div>
+  </div>

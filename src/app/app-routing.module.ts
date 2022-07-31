@@ -14,14 +14,25 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'customers',
-    loadChildren: () => import('./features/customers/customers.module').then(m => m.CustomersModule),
+    path: 'project-floor',
+    loadChildren: () => import('./features/project-floor/module/project-floor.module').then(m => m.ProjectFloorModule),
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: 'item',
+    loadChildren: () => import('./features/item/module/item.module').then(m => m.ItemModule),
     canActivate: [AuthGuard]
   },
 
   {
     path: 'organizations',
     loadChildren: () => import('./features/organization/modules/organization.module').then(m => m.OrganizationModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'groups',
+    loadChildren: () => import('./features/group/module/group.module').then(m => m.GroupModule),
     canActivate: [AuthGuard]
   },
   {
@@ -73,13 +84,13 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'icons',
+    path: 'project',
     loadChildren: () => import('./features/project/module/project.module').then(m => m.ProjectModule),
     canActivate: [AuthGuard]
   },
   {
-    path: 'typography',
-    loadChildren: () => import('./features/typography/typography.module').then(m => m.TypographyModule),
+    path: 'roles',
+    loadChildren: () => import('./features/roles/module/role.module').then(m => m.RoleModule),
     canActivate: [AuthGuard]
   },
   {

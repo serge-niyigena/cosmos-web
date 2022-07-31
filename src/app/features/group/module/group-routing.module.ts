@@ -1,19 +1,27 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { GroupComponent } from '../page/group.component';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from 'src/app/shared/layout/layout.component';
-import { TypographyComponent } from './typography/typography.component';
+
+
+
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', component: TypographyComponent },
+      { path: '', component: GroupComponent },
     ]
   }
 ];
+
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports:[RouterModule],
+  imports: [
+    RouterModule.forChild(routes),
+    RouterModule
+  ]
 })
-export class TypographyRoutingModule { }
+export class GroupRoutingModule { }

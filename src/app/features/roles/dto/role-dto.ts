@@ -1,5 +1,4 @@
-export class UserRoleDTO {
-  
+export class RoleDTO {
         roleId: number;
         roleName: string;
         roleDesc: string ;

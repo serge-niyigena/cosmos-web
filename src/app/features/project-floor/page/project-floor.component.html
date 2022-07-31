@@ -1,0 +1,177 @@
+<div class="container" fxLayout="row" fxLayoutAlign="center none">
+  <div fxFlex="95%">
+
+    <mat-card>
+      <mat-card-content>
+        <h2>Projects floors</h2>
+
+        <div class="container">
+         
+             <div class="mt10 pl10 pr9" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="flex-end">
+             
+             <mat-form-field>
+              <mat-placeholder>Search</mat-placeholder>
+              <input matInput type="search" [(ngModel)]="searchValue">
+              <button mat-icon-button matSuffix color="primary" aria-label="search">
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+            <button mat-flat-button color="primary" class="createBtn" (click)="openDialog(null)">Create<mat-icon>add</mat-icon></button>
+         
+            </div>
+            
+            <table mat-table  [dataSource]="projectFloorsList" #myTable class="my-table mat-elevation-z8">
+          
+              <!-- Position Column -->
+              <ng-container matColumnDef="floor">
+                <th mat-header-cell *matHeaderCellDef> Floor </th>
+                <td mat-cell *matCellDef="let element"> {{element.pFloorValue}} </td>
+              </ng-container>
+          
+
+              <ng-container matColumnDef="projectFloor">
+                  <th mat-header-cell *matHeaderCellDef> Reference </th>
+                  <td mat-cell *matCellDef="let element"> {{element.pFloorProject.name}} </td>
+                </ng-container>
+            
+            
+              <ng-container matColumnDef="ref">
+                <th mat-header-cell *matHeaderCellDef> Description </th>
+                <td mat-cell *matCellDef="let element"> {{element.pFloorRef}} </td>
+              </ng-container>
+        
+             
+              <ng-container matColumnDef="measurement">
+                <th mat-header-cell *matHeaderCellDef> WEF </th>
+                <td mat-cell *matCellDef="let element"> {{element.pFloorMeasurement}} </td>
+              </ng-container>
+          
+              <!-- Weight Column -->
+              <ng-container matColumnDef="desc">
+                <th mat-header-cell *matHeaderCellDef> WET </th>
+                <td mat-cell *matCellDef="let element"> {{element.pFloorDescription}} </td>
+              </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef> Selection type </th>
+                  <td mat-cell *matCellDef="let element"> {{element.pFloorStatus.name}} </td>
+                </ng-container>
+        
+              <!-- Action Column-->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef > Actions </th>
+              <td mat-cell *matCellDef="let element"> 
+                <button mat-icon-button matTooltip="Click to Edit" (click)="openDialog(element)" class="iconbutton" color="accent" >
+                  <mat-icon>edit</mat-icon>
+                </button>
+        
+                <button mat-icon-button matTooltip="Click to delete" (click)="delete(element)" class="iconbutton" color="warn" >
+                  <mat-icon>delete</mat-icon>
+                </button> 
+              </td>
+              </ng-container>
+        
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                           
+                           
+                           showFirstLastButtons 
+                           aria-label="Select page of periodic elements">
+            </mat-paginator>
+          </div>
+        
+        <ng-template #orgModal>
+            <h2 mat-dialog-title class="text-center">Project</h2>
+        
+        <mat-dialog-content [formGroup]="form">
+
+          <mat-form-field class="full-width">
+            <mat-label>Project</mat-label>
+            <mat-select formControlName="statusId" multiple>
+             
+              <mat-option *ngFor="let p of projectsList" [value]="p.id">{{p.name}}</mat-option>
+            </mat-select>
+            <mat-error  *ngIf="form.controls['statusId'].hasError('required')">
+              project category
+              <strong>required</strong>
+          </mat-error> 
+          </mat-form-field>
+          
+          <mat-form-field class="full-width">
+              
+            <input id="nameInput" matInput placeholder="Value" formControlName="pFloorValue" autocomplete="name"
+            type="name">
+            <mat-error  *ngIf="form.controls['pFloorValue'].hasError('required')">
+              project name is
+              <strong>required</strong>
+          </mat-error>
+                    
+          </mat-form-field>
+        
+          <mat-form-field class="full-width">
+              
+            <input  matInput placeholder="Reference" formControlName="pFloorRef" autocomplete="pFloorRef"
+            type="text">
+            <mat-error  *ngIf="form.controls['pFloorRef'].hasError('required')">
+              Description is
+              <strong>required</strong>
+          </mat-error>  
+          </mat-form-field>
+
+        
+        
+            <mat-form-field class="full-width">
+              
+              <input matInput placeholder="Measurement" formControlName="pFloorMeasurement" autocomplete="pFloorMeasurement"
+              type="string">
+                       <mat-error *ngIf="form.controls['pFloorMeasurement'].hasError('required')">
+                          selection type is
+                          <strong>required</strong>
+                    </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="full-width">
+              
+              <input matInput placeholder="Description" formControlName="pFloorDescription" autocomplete="pFloorDescription"
+              type="string">
+                       <mat-error *ngIf="form.controls['pFloorDescription'].hasError('required')">
+                          selection type is
+                          <strong>required</strong>
+                    </mat-error>
+            </mat-form-field>
+
+          
+
+            <mat-form-field class="full-width">
+              <mat-label>Poject status</mat-label>
+              <mat-select formControlName="statusId" multiple>
+               
+                <mat-option *ngFor="let s of statusList" [value]="s.id">{{s.name}}</mat-option>
+              </mat-select>
+              <mat-error  *ngIf="form.controls['statusId'].hasError('required')">
+                project status
+                <strong>required</strong>
+            </mat-error> 
+            </mat-form-field>
+
+
+        </mat-dialog-content>
+        
+        <mat-dialog-actions fxLayout="row" fxLayoutGap="10Px" fxLayoutAlign="flex-end">
+            <button class="mat-raised-button mat-accent"(click)="close()">Close</button>
+            <button class="mat-raised-button mat-primary"(click)="save()" [disabled]="(form.invalid)"  >Save</button>
+        </mat-dialog-actions>
+          
+          </ng-template>
+          
+
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>
