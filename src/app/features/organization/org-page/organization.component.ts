@@ -23,7 +23,8 @@ export class OrganizationComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   form: FormGroup;
-  searchValue:string;
+  searchValue:string="";
+  searchParam:string="";
   page:number=0;
   pageSize:number=10;
   sortDirection:string="desc";
@@ -83,9 +84,20 @@ export class OrganizationComponent implements OnInit {
 }
 
 
-  private getPaginatedOrganizations(){
+  public getPaginatedOrganizations(){
 
-    const params=Utilities.getRequestParams(this.searchValue,this.page,this.pageSize,this.sortDirection);
+    if(this.isAnumber(this.searchValue)){
+      this.searchParam="mobileNumberEQ";
+    }
+    if(!this.isAnumber(this.searchValue) &&this.searchValue!=="" && !this.searchValue?.includes('@')){
+      this.searchParam="nameEQ";
+    }
+
+    if(!this.isAnumber(this.searchValue) && this.searchValue?.includes('@')){
+      this.searchParam="emailEQ";
+    }
+
+    const params=Utilities.getRequestParams(this.searchParam+this.searchValue,this.page,this.pageSize,this.sortDirection);
     this.orgService.getOrganizationsList(params,).subscribe(res => {
     this.orgList = res['content']['data'];
     this.pageInfo= res['content']['pageInfo'];
@@ -161,6 +173,10 @@ export class OrganizationComponent implements OnInit {
       
    });
   
+  }
+
+  private isAnumber(value:string): boolean {
+    return /^\d+$/.test(value);
   }
 
 }

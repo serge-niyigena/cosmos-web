@@ -1,0 +1,166 @@
+<div class="container" fxLayout="row" fxLayoutAlign="center none">
+    <div fxFlex="95%">
+  
+      <mat-card>
+        <mat-card-content>
+          <h2>Projects floors</h2>
+  
+          <div class="container">
+           
+               <div class="mt10 pl10 pr9" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="flex-end">
+               
+               <mat-form-field>
+                <mat-placeholder>Search</mat-placeholder>
+                <input matInput type="search" [(ngModel)]="searchValue">
+                <button mat-icon-button matSuffix color="primary" aria-label="search">
+                  <mat-icon>search</mat-icon>
+                </button>
+              </mat-form-field>
+              <button mat-flat-button color="primary" class="createBtn" (click)="openDialog(null)">Create<mat-icon>add</mat-icon></button>
+           
+              </div>
+              
+              <table mat-table  [dataSource]="floorItemsList" #myTable class="my-table mat-elevation-z8">
+            
+                <!-- Position Column -->
+                <ng-container matColumnDef="floor">
+                  <th mat-header-cell *matHeaderCellDef> Floor </th>
+                  <td mat-cell *matCellDef="let element"> {{element.pFloorValue}} </td>
+                </ng-container>
+            
+  
+                <ng-container matColumnDef="floorItem">
+                    <th mat-header-cell *matHeaderCellDef> Reference </th>
+                    <td mat-cell *matCellDef="let element"> {{element.pFloorProject.name}} </td>
+                  </ng-container>
+              
+              
+                <ng-container matColumnDef="normalQuantity">
+                  <th mat-header-cell *matHeaderCellDef> Description </th>
+                  <td mat-cell *matCellDef="let element"> {{element.pFloorRef}} </td>
+                </ng-container>
+          
+               
+                <ng-container matColumnDef="maximumQuantity">
+                  <th mat-header-cell *matHeaderCellDef> WEF </th>
+                  <td mat-cell *matCellDef="let element"> {{element.pFloorMeasurement}} </td>
+                </ng-container>
+            
+                <!-- Weight Column -->
+                <ng-container matColumnDef="usedQuantity">
+                  <th mat-header-cell *matHeaderCellDef> WET </th>
+                  <td mat-cell *matCellDef="let element"> {{element.pFloorDescription}} </td>
+                </ng-container>
+  
+                  <!-- Weight Column -->
+                  <ng-container matColumnDef="floorItemStatus">
+                    <th mat-header-cell *matHeaderCellDef> Selection type </th>
+                    <td mat-cell *matCellDef="let element"> {{element.pFloorStatus.name}} </td>
+                  </ng-container>
+          
+                <!-- Action Column-->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef > Actions </th>
+                <td mat-cell *matCellDef="let element"> 
+                  <button mat-icon-button matTooltip="Click to Edit" (click)="openDialog(element)" class="iconbutton" color="accent" >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+          
+                  <button mat-icon-button matTooltip="Click to delete" (click)="delete(element)" class="iconbutton" color="warn" >
+                    <mat-icon>delete</mat-icon>
+                  </button> 
+                </td>
+                </ng-container>
+          
+  
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                             
+                             
+                             showFirstLastButtons 
+                             aria-label="Select page of periodic elements">
+              </mat-paginator>
+            </div>
+          
+          <ng-template #orgModal>
+              <h2 mat-dialog-title class="text-center">Floor item</h2>
+          
+          <mat-dialog-content [formGroup]="form">
+  
+            <mat-form-field class="full-width">
+              <mat-label>Project floor</mat-label>
+              <mat-select formControlName="floorItemProjectFloorId" multiple>
+               
+                <mat-option *ngFor="let f of projectFloorsList" [value]="f.id">{{f.pFloorValue}}</mat-option>
+              </mat-select>
+              <mat-error  *ngIf="form.controls['floorItemProjectFloorId'].hasError('required')">
+                project floor
+                <strong>required</strong>
+            </mat-error> 
+            </mat-form-field>
+
+            <mat-form-field class="full-width">
+                <mat-label>Item</mat-label>
+                <mat-select formControlName="floorItemItemId" multiple>
+                 
+                  <mat-option *ngFor="let i of itemsList" [value]="i.id">{{i.name}}</mat-option>
+                </mat-select>
+                <mat-error  *ngIf="form.controls['floorItemItemId'].hasError('required')">
+                   Item is
+                  <strong>required</strong>
+              </mat-error> 
+              </mat-form-field>
+            
+            <mat-form-field class="full-width">
+                
+              <input matInput placeholder="Value" formControlName="floorItemNormalQuantity" autocomplete="name"
+              type="number">
+              <mat-error  *ngIf="form.controls['floorItemNormalQuantity'].hasError('required')">
+                Normal quantity is
+                <strong>required</strong>
+            </mat-error>
+                      
+            </mat-form-field>
+
+              <mat-form-field class="full-width">
+                
+                <input matInput placeholder="Value" formControlName="floorItemMaximumQuantity" autocomplete="name"
+                type="number">
+                <mat-error  *ngIf="form.controls['floorItemMaximumQuantity'].hasError('required')">
+                  Maximum quantity is
+                  <strong>required</strong>
+              </mat-error>
+                        
+              </mat-form-field>
+
+
+            <mat-form-field class="full-width">
+                
+                <input matInput placeholder="Value" formControlName="floorItemUsedQuantity" autocomplete="name"
+                type="number">
+                <mat-error  *ngIf="form.controls['floorItemUsedQuantity'].hasError('required')">
+                  Used quantity is
+                  <strong>required</strong>
+              </mat-error>
+                        
+              </mat-form-field>
+          
+  
+          </mat-dialog-content>
+          
+          <mat-dialog-actions fxLayout="row" fxLayoutGap="10Px" fxLayoutAlign="flex-end">
+              <button class="mat-raised-button mat-accent"(click)="close()">Close</button>
+              <button class="mat-raised-button mat-primary"(click)="save()" [disabled]="(form.invalid)"  >Save</button>
+          </mat-dialog-actions>
+            
+            </ng-template>
+            
+  
+        </mat-card-content>
+      </mat-card>
+  
+    </div>
+  </div>

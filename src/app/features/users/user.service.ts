@@ -28,15 +28,15 @@ export class UserService {
   }
 
   createUser(user:UserSendDTO){
-    return this.http.post(`${this.baseUrl}/createUser`,user);
+    return this.http.post(`${this.baseUrl}/user/create`,user);
   }
 
   updateUser(user:UserSendDTO,userId:number){
-    return this.http.post(`${this.baseUrl}/updateUser/${userId}`,user);
+    return this.http.post(`${this.baseUrl}/user/update/${userId}`,user);
   }
 
-deleteUser(userId:number){
-    return this.http.post(`${this.baseUrl}/deleteUser`,userId);
+deleteUser(user:UserDTO){
+    return this.http.post(`${this.baseUrl}/user/delete`,user);
   }
 
   getUser(id:number): Observable<UserDTO>{

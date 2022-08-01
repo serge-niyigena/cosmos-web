@@ -62,7 +62,7 @@ export class ItemCategoryComponent implements OnInit {
 
   openDialog(data:any) {
     this.initiateForm();
-    
+    console.log(data)
     if(data!=null){
     this.id=data.id;
     this.update(data);
@@ -142,7 +142,7 @@ export class ItemCategoryComponent implements OnInit {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.orgService.deleteItemCategory(data.id).subscribe(res => {
+        this.orgService.deleteItemCategory(data).subscribe(res => {
 
           const index = this.itemCategories.findIndex(x=>x.id==data.id);
           this.itemCategories.splice(index,1);

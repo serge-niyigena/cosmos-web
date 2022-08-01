@@ -27,8 +27,8 @@ export class ItemCategoryService {
     return this.http.post(`${this.baseUrl}/itemCategory/update/${orgId}`,itemCategory);
   }
 
-deleteItemCategory(orgId:number){
-    return this.http.post(`${this.baseUrl}/itemCategory/delete`,orgId);
+deleteItemCategory(cat:ItemCategoryDTO){
+    return this.http.post(`${this.baseUrl}/itemCategory/delete`,cat);
   }
 
   getItemCategory(id:number): Observable<ItemCategoryDTO>{

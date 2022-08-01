@@ -14,9 +14,9 @@ export class UserTypeService {
   constructor(private http: HttpClient) { }
 
 
-  getUserTypesList(params:any):Observable<any[]>  {
+  getUserTypesList():Observable<any[]>  {
 
-    return this.http.get<any>( `${this.baseUrl}/userType`,{params});
+    return this.http.get<any>(`${this.baseUrl}/userType`);
     
   }
 
@@ -24,12 +24,12 @@ export class UserTypeService {
     return this.http.post(`${this.baseUrl}/userType/create`,userType);
   }
 
-  updateUserType(userType:UserTypeDTO,orgId:number){
-    return this.http.post(`${this.baseUrl}/userType/update/${orgId}`,userType);
+  updateUserType(userType:UserTypeDTO){
+    return this.http.post(`${this.baseUrl}/userType/update`,userType);
   }
 
-deleteUserType(orgId:number){
-    return this.http.post(`${this.baseUrl}/userType/delete`,orgId);
+deleteUserType(type:UserTypeDTO){
+    return this.http.post(`${this.baseUrl}/userType/delete`,type);
   }
 
   getUserType(id:number): Observable<UserTypeDTO>{

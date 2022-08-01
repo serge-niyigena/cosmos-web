@@ -10,10 +10,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { LoggerModule } from 'ngx-logger';
 import { environment } from '../environments/environment';
 import { ItemComponent } from './features/item/page/item.component';
+import { FloorItemComponent } from './features/floor-item/page/floor-item.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    FloorItemComponent
   ],
   imports: [
     BrowserModule,

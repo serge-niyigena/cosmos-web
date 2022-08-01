@@ -10,9 +10,9 @@
              <div class="mt10 pl10 pr9" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="flex-end">
              
              <mat-form-field>
-              <mat-placeholder>Search</mat-placeholder>
+              <mat-placeholder>Search name/mobile</mat-placeholder>
               <input matInput type="search" [(ngModel)]="searchValue">
-              <button mat-icon-button matSuffix color="primary" aria-label="search">
+              <button mat-icon-button matSuffix (click)="getPaginatedUsers()" color="primary" aria-label="search">
                 <mat-icon>search</mat-icon>
               </button>
             </mat-form-field>
@@ -39,6 +39,12 @@
               <ng-container matColumnDef="email">
                 <th mat-header-cell *matHeaderCellDef> Email </th>
                 <td mat-cell *matCellDef="let element"> {{element.userEmail}} </td>
+              </ng-container>
+
+               <!-- Name Column -->
+               <ng-container matColumnDef="org">
+                <th mat-header-cell *matHeaderCellDef> Organization </th>
+                <td mat-cell *matCellDef="let element"> {{element.userOrg.name}} </td>
               </ng-container>
           
               <!-- Weight Column -->
@@ -89,6 +95,18 @@
             <h2 mat-dialog-title class="text-center">USER</h2>
         
         <mat-dialog-content [formGroup]="form">
+
+          <mat-form-field class="full-width">
+            <mat-label>User organization</mat-label>
+            <mat-select formControlName="userOrgId">
+             
+              <mat-option *ngFor="let og of orgsList" [value]="og.id">{{og.name}}</mat-option>
+            </mat-select>
+            <mat-error  *ngIf="form.controls['userOrgId'].hasError('required')">
+              user organization
+              <strong>required</strong>
+          </mat-error> 
+          </mat-form-field>
           
           <mat-form-field class="full-width">
               
@@ -122,7 +140,7 @@
 
             <mat-form-field class="full-width">
               <mat-label>User type</mat-label>
-              <mat-select formControlName="userTypeId" multiple>
+              <mat-select formControlName="userTypeId">
                
                 <mat-option *ngFor="let t of userTypes" [value]="t.id">{{t.name}}</mat-option>
               </mat-select>
@@ -136,7 +154,7 @@
               <mat-label>USER ACTIVE</mat-label>
               <mat-select formControlName="userStatus">
                 <mat-option  value="Y">YES</mat-option>
-                <mat-option  value="Y">NO</mat-option>
+                <mat-option  value="N">NO</mat-option>
               </mat-select>
               <mat-error  *ngIf="form.controls['userStatus'].hasError('required')">
                 user status is
@@ -148,7 +166,7 @@
               <mat-label>USER RESET</mat-label>
               <mat-select formControlName="userReset">
                 <mat-option  value="Y">YES</mat-option>
-                <mat-option  value="Y">NO</mat-option>
+                <mat-option  value="N">NO</mat-option>
               </mat-select>
               <mat-error  *ngIf="form.controls['userReset'].hasError('required')">
                 user status is
@@ -169,14 +187,14 @@
             </mat-form-field>
 
 
-            <!-- <mat-form-field class="full-width">
+            <mat-form-field class="full-width">
               <mat-label>projects</mat-label>
               <mat-select formControlName="projectsIds" multiple>
                
-                <mat-option *ngFor="let g of projectsList" [value]="g.id">{{g.name}}</mat-option>
+                <mat-option *ngFor="let p of projectsList" [value]="p.id">{{p.name}}</mat-option>
               </mat-select>
               
-            </mat-form-field> -->
+            </mat-form-field>
 
         </mat-dialog-content>
         

@@ -16,23 +16,23 @@ export class ProjectStatusService {
 
   getProjectStatusesList(params:any):Observable<any[]>  {
 
-    return this.http.get<any>( `${this.baseUrl}/itemType`,{params});
+    return this.http.get<any>( `${this.baseUrl}/projectStatus`,{params});
     
   }
 
-  createProjectStatus(itemType:ProjectStatusDTO){
-    return this.http.post(`${this.baseUrl}/itemType/create`,itemType);
+  createProjectStatus(projectStatus:ProjectStatusDTO){
+    return this.http.post(`${this.baseUrl}/projectStatus/create`,projectStatus);
   }
 
-  updateProjectStatus(itemType:ProjectStatusDTO,orgId:number){
-    return this.http.post(`${this.baseUrl}/itemType/update/${orgId}`,itemType);
+  updateProjectStatus(projectStatus:ProjectStatusDTO){
+    return this.http.post(`${this.baseUrl}/projectStatus/update`,projectStatus);
   }
 
-deleteProjectStatus(orgId:number){
-    return this.http.post(`${this.baseUrl}/itemType/delete`,orgId);
+deleteProjectStatus(status:ProjectStatusDTO){
+    return this.http.post(`${this.baseUrl}/projectStatus/delete`,status);
   }
 
   getProjectStatus(id:number): Observable<ProjectStatusDTO>{
-    return this.http.get<ProjectStatusDTO>(`${this.baseUrl}/itemType/${id}`);
+    return this.http.get<ProjectStatusDTO>(`${this.baseUrl}/projectStatus/${id}`);
   }
 }

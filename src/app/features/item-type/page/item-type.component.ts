@@ -119,8 +119,8 @@ export class ItemTypeComponent implements OnInit {
 
   if(this.id!==0){
     const org= new ItemTypeDTO(this.form.value);
-   
-    this.orgService.updateItemType(org,this.id).subscribe(res => {
+    org.id=this.id;
+    this.orgService.updateItemType(org).subscribe(res => {
 
     const index = this.itemTypesList.findIndex(x=>x.id==this.id);
     this.itemTypesList.splice(index,1,res['content']);
@@ -142,7 +142,7 @@ export class ItemTypeComponent implements OnInit {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.orgService.deleteItemType(data.id).subscribe(res => {
+        this.orgService.deleteItemType(data).subscribe(res => {
 
           const index = this.itemTypesList.findIndex(x=>x.id==data.id);
           this.itemTypesList.splice(index,1);

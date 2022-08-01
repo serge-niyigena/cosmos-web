@@ -14,7 +14,7 @@ import { ProjectFloorDTO } from '../dto/project-floor-dto';
 import { ProjectFloorData } from '../dto/project-floor-data';
 import { ProjectDataDTO } from '../../project/dto/project-data-dto';
 import { ProjectStatusDTO } from '../../project-status/dto/project-status-dto';
-import { ProjectFloorFloorService } from '../project-floor.service';
+import { ProjectFloorService } from '../project-floor.service';
 import { ProjectStatusService } from '../../project-status/project-status.service';
 import { ProjectService } from '../../project/project.service';
 
@@ -46,7 +46,7 @@ export class ProjectFloorFloorComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private logger: NGXLogger,private notificationService: NotificationService,
-    private titleService: Title,private projectFloorService:ProjectFloorFloorService,
+    private titleService: Title,private projectFloorService:ProjectFloorService,
     private statusService:ProjectStatusService,private dialog: MatDialog,private projectService:ProjectService
   ) { }
  

@@ -120,8 +120,8 @@ export class UnitTypeComponent implements OnInit {
 
   if(this.id!==0){
     const org= new UnitTypeDTO(this.form.value);
-   
-    this.orgService.updateUnitType(org,this.id).subscribe(res => {
+   org.id=this.id;
+    this.orgService.updateUnitType(org).subscribe(res => {
 
     const index = this.unitTypesList.findIndex(x=>x.id==this.id);
     this.unitTypesList.splice(index,1,res['content']);
@@ -143,7 +143,7 @@ export class UnitTypeComponent implements OnInit {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.orgService.deleteUnitType(data.id).subscribe(res => {
+        this.orgService.deleteUnitType(data).subscribe(res => {
 
           const index = this.unitTypesList.findIndex(x=>x.id==data.id);
           this.unitTypesList.splice(index,1);

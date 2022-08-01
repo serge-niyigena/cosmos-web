@@ -23,7 +23,7 @@ import { GroupService } from '../group.service';
 export class GroupComponent implements OnInit {
 
  
-  displayedColumns: string[] = ['name', 'desc'];
+  displayedColumns: string[] = ['name', 'desc','action'];
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('groupModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -56,7 +56,7 @@ export class GroupComponent implements OnInit {
   initiateForm(){
       this.form = this.fb.group({
         name: ['', [Validators.required]],
-        desc: ['', [Validators.required,Validators.email]],
+        desc: ['', [Validators.required]],
         rolesIds: ['', [Validators.required]],
         usersIds: ['', []]
     });
@@ -64,7 +64,7 @@ export class GroupComponent implements OnInit {
 
 
   update(data:GroupData){
-  
+  this.id=data.id;
     this.form.patchValue({
         name: data.name,
         desc: data.desc,
@@ -105,13 +105,14 @@ export class GroupComponent implements OnInit {
 
   getAllUsers(){
     this.userService.getAllUsersList().subscribe(res=>{
-      this.groupsList= res['content'];
+      this.usersList= res['content'];
     });
   }
 
   getAllRoles(){
-    this.userService.getAllUsersList().subscribe(res=>{
-      this.usersList= res['content'];
+    this.roleService.getAllRolesList().subscribe(res=>{
+      this.roles= res['content'];
+      console.log(JSON.stringify(this.roles))
     });
   }
 
@@ -127,22 +128,22 @@ export class GroupComponent implements OnInit {
     if(this.id==0){
      const group= new GroupDTO(this.form.value);
      console.log(JSON.stringify(group))
-  //   this.orgService.createGroup(group).subscribe(res => {
-  //   this.notificationService.openSnackBar(res['message']);
+    this.groupService.createGroup(group).subscribe(res => {
+    this.notificationService.openSnackBar(res['message']);
     
-  //   this.groupsList.unshift(res['content']);
-  //   this.paginator.pageSize= this.pageInfo.pageSize;
+    this.groupsList.unshift(res['content']);
+    this.paginator.pageSize= this.pageInfo.pageSize;
 
-  //   //this.groupsList.push(res['content']);
-  //   this.close();
+    //this.groupsList.push(res['content']);
+    this.close();
     
-  //   },
-  //   error => {
-  //     console.log(error)
-  //     this.notificationService.openSnackBar(error.error.message);
+    },
+    error => {
+      console.log(error)
+      this.notificationService.openSnackBar(error.error.message);
   
-  // }
-  //   );
+  }
+    );
   }
 
   if(this.id!==0){
@@ -158,7 +159,7 @@ export class GroupComponent implements OnInit {
   }
   }
 
-  delete(data:GroupDTO){
+  delete(data:GroupData){
     // let's call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
@@ -170,7 +171,7 @@ export class GroupComponent implements OnInit {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.groupService.deleteGroup(data.id).subscribe(res => {
+        this.groupService.deleteGroup(data).subscribe(res => {
 
           const index = this.groupsList.findIndex(x=>x.id==data.id);
           this.groupsList.splice(index,1);

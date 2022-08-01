@@ -16,23 +16,23 @@ export class UnitTypeService {
 
   getUnitTypesList(params:any):Observable<any[]>  {
 
-    return this.http.get<any>( `${this.baseUrl}/itemType`,{params});
+    return this.http.get<any>( `${this.baseUrl}/unitType`,{params});
     
   }
 
-  createUnitType(itemType:UnitTypeDTO){
-    return this.http.post(`${this.baseUrl}/itemType/create`,itemType);
+  createUnitType(unitType:UnitTypeDTO){
+    return this.http.post(`${this.baseUrl}/unitType/create`,unitType);
   }
 
-  updateUnitType(itemType:UnitTypeDTO,orgId:number){
-    return this.http.post(`${this.baseUrl}/itemType/update/${orgId}`,itemType);
+  updateUnitType(unitType:UnitTypeDTO){
+    return this.http.post(`${this.baseUrl}/unitType/update/`,unitType);
   }
 
-deleteUnitType(orgId:number){
-    return this.http.post(`${this.baseUrl}/itemType/delete`,orgId);
+deleteUnitType(type:UnitTypeDTO){
+    return this.http.post(`${this.baseUrl}/unitType/delete`,type);
   }
 
   getUnitType(id:number): Observable<UnitTypeDTO>{
-    return this.http.get<UnitTypeDTO>(`${this.baseUrl}/itemType/${id}`);
+    return this.http.get<UnitTypeDTO>(`${this.baseUrl}/unitType/${id}`);
   }
 }

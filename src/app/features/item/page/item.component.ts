@@ -56,9 +56,7 @@ export class ItemComponent implements OnInit {
   ngOnInit(): void {
    
     this.getPaginatedItems();
-    this.getAllCategories();
-    this.getAllItemTypes();
-    this.getAlUnitTypes();
+   
   }
 
 
@@ -80,13 +78,15 @@ export class ItemComponent implements OnInit {
       desc: data.desc,
       itemCategoryId: data.itemCategory.id,
       itemUnitTypeId: data.itemUnitType.id,
-      itemTypeId: data.itemUnitType.id,
+      itemTypeId: data.itemType.id,
     
   });
   }
 
-
   openDialog(data:any) {
+    this.getAllCategories();
+    this.getAllItemTypes();
+    this.getAlUnitTypes();
     this.initiateForm();
     
     if(data!=null){
@@ -116,19 +116,19 @@ export class ItemComponent implements OnInit {
 
   getAllCategories(){
     this.categoryService.getItemCategorysList(null).subscribe(res=>{
-      this.categories= res['content'];
+      this.categories= res['content']['data'];
     });
   }
 
   getAllItemTypes(){
     this.itemTypeService.getItemTypesList(null).subscribe(res=>{
-      this.itemTypes= res['content'];
+      this.itemTypes= res['content']['data'];
     });
   }
 
   getAlUnitTypes(){
     this.unitTypeService.getUnitTypesList(null).subscribe(res=>{
-      this.unitTypes= res['content'];
+      this.unitTypes= res['content']['data'];
     });
   }
 
@@ -144,22 +144,22 @@ export class ItemComponent implements OnInit {
     if(this.id==0){
      const item= new ItemDTO(this.form.value);
      console.log(JSON.stringify(item))
-  //   this.orgService.createItem(item).subscribe(res => {
-  //   this.notificationService.openSnackBar(res['message']);
+    this.itemService.createItem(item).subscribe(res => {
+    this.notificationService.openSnackBar(res['message']);
     
-  //   this.itemsList.unshift(res['content']);
-  //   this.paginator.pageSize= this.pageInfo.pageSize;
+    this.itemsList.unshift(res['content']);
+    this.paginator.pageSize= this.pageInfo.pageSize;
 
-  //   //this.itemsList.push(res['content']);
-  //   this.close();
+    //this.itemsList.push(res['content']);
+    this.close();
     
-  //   },
-  //   error => {
-  //     console.log(error)
-  //     this.notificationService.openSnackBar(error.error.message);
+    },
+    error => {
+      console.log(error)
+      this.notificationService.openSnackBar(error.error.message);
   
-  // }
-  //   );
+  }
+    );
   }
 
   if(this.id!==0){
@@ -187,7 +187,7 @@ export class ItemComponent implements OnInit {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.itemService.deleteItem(data.id).subscribe(res => {
+        this.itemService.deleteItem(data).subscribe(res => {
 
           const index = this.itemsList.findIndex(x=>x.id==data.id);
           this.itemsList.splice(index,1);

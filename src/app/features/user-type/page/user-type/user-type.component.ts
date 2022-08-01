@@ -31,7 +31,7 @@ export class UserTypeComponent implements OnInit {
   
   pageInfo:PageInfo;
 
-  userTypesList:UserTypeDTO[];
+  userTypesList:any[];
 
   constructor(private fb: FormBuilder,private orgService:UserTypeService,
     private notificationService:NotificationService,
@@ -52,7 +52,7 @@ export class UserTypeComponent implements OnInit {
     }
 
 
-  update(data:UserTypeDTO){
+  update(data:any){
     this.form.patchValue({
       name: data.name,
       desc:data.desc
@@ -78,22 +78,22 @@ export class UserTypeComponent implements OnInit {
   private getPaginatedUserTypees(){
 
     const params=Utilities.getRequestParams(this.searchValue,this.page,this.pageSize,this.sortDirection);
-    this.orgService.getUserTypesList(params,).subscribe(res => {
-    this.userTypesList = res['content']['data'];
-    this.pageInfo= res['content']['pageInfo'];
-    this.paginator.pageSize=this.pageInfo.pageSize;
-    this.paginator.pageIndex=this.pageInfo.pageNumber;
-    this.paginator.length=this.pageInfo.totalResults;
+    this.orgService.getUserTypesList().subscribe(res => {
+    this.userTypesList = res['content'];
+    // this.pageInfo= res['content']['pageInfo'];
+    // this.paginator.pageSize=this.pageInfo.pageSize;
+    // this.paginator.pageIndex=this.pageInfo.pageNumber;
+    // this.paginator.length=this.pageInfo.totalResults;
   
   });
   }
 
   close(){
-
+    this.id=0;
     this.dialog.closeAll();
     this.myTable.renderRows();
     this.initiateForm();
-    this.id=0;
+  
   }
 
   save(){
@@ -103,7 +103,7 @@ export class UserTypeComponent implements OnInit {
     this.notificationService.openSnackBar(res['message']);
     
     this.userTypesList.unshift(res['content']);
-    this.paginator.pageSize= this.pageInfo.pageSize;
+    //this.paginator.pageSize= this.pageInfo.pageSize;
 
     //this.userTypesList.push(res['content']);
     this.close();
@@ -119,14 +119,21 @@ export class UserTypeComponent implements OnInit {
 
   if(this.id!==0){
     const org= new UserTypeDTO(this.form.value);
-   
-    this.orgService.updateUserType(org,this.id).subscribe(res => {
+    org.id=this.id;
+    this.orgService.updateUserType(org).subscribe(res => {
 
     const index = this.userTypesList.findIndex(x=>x.id==this.id);
     this.userTypesList.splice(index,1,res['content']);
+    console.log(res['content'])
     this.notificationService.openSnackBar(res['message']);
     this.close();
-    });
+    },
+    error => {
+      console.log(error)
+      this.notificationService.openSnackBar(error.error.message);
+  
+  }
+    );
   }
   }
 
@@ -142,7 +149,7 @@ export class UserTypeComponent implements OnInit {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.orgService.deleteUserType(data.id).subscribe(res => {
+        this.orgService.deleteUserType(data).subscribe(res => {
 
           const index = this.userTypesList.findIndex(x=>x.id==data.id);
           this.userTypesList.splice(index,1);

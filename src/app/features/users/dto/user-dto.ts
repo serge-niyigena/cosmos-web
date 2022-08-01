@@ -1,3 +1,4 @@
+import { OrgDTO } from "../../organization/dto/org-dto";
 import { ProjectDataDTO } from "../../project/dto/project-data-dto";
 import { RoleDTO } from "../../roles/dto/role-dto";
 import { UserTypeDTO } from "../../user-type/dto/user-type-dto";
@@ -15,6 +16,7 @@ export class UserDTO {
     projects: ProjectDataDTO[];
     userStatus: string;
     userReset: string;
+    userOrg:OrgDTO;
     
 
 }

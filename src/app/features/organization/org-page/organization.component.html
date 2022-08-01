@@ -9,9 +9,9 @@
           <div class="mt10 pl10 pr9" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="flex-end">
 
             <mat-form-field>
-              <mat-placeholder>Search</mat-placeholder>
+              <mat-placeholder>Search mobile/name</mat-placeholder>
               <input matInput type="search" [(ngModel)]="searchValue">
-              <button mat-icon-button matSuffix color="primary" aria-label="search">
+              <button mat-icon-button matSuffix (click)="getPaginatedOrganizations()" color="primary" aria-label="search">
                 <mat-icon>search</mat-icon>
               </button>
             </mat-form-field>
@@ -109,7 +109,7 @@
 
             <mat-form-field class="full-width">
 
-              <input id="nameInput" matInput placeholder="Name" formControlName="name" autocomplete="name" type="name">
+              <input  matInput placeholder="Name" formControlName="name" autocomplete="name" type="name">
               <mat-error *ngIf="form.controls['name'].hasError('required')">
                 Name is
                 <strong>required</strong>

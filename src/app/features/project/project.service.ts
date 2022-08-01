@@ -20,16 +20,22 @@ export class ProjectService {
     
   }
 
+  getAllProjects():Observable<any[]>  {
+
+    return this.http.get<any>( `${this.baseUrl}/project/all`);
+    
+  }
+
   createProject(project:ProjectDTO){
-    return this.http.post(`${this.baseUrl}/createProject`,project);
+    return this.http.post(`${this.baseUrl}/project/create`,project);
   }
 
   updateProject(project:ProjectDTO,projectId:number){
-    return this.http.post(`${this.baseUrl}/updateProject/${projectId}`,project);
+    return this.http.post(`${this.baseUrl}/project/update/${projectId}`,project);
   }
 
 deleteProject(projectId:number){
-    return this.http.post(`${this.baseUrl}/deleteProject`,projectId);
+    return this.http.post(`${this.baseUrl}/project/delete`,projectId);
   }
 
   getProject(id:number): Observable<ProjectDTO>{

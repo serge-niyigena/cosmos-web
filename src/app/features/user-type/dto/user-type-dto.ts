@@ -4,6 +4,7 @@ export class UserTypeDTO {
     desc:string
 
     constructor(data:any){
+        
         this.name=data['name'];
         this.desc= data['desc'];
     }

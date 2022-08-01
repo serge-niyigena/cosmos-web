@@ -32,7 +32,7 @@
                 <!-- Name Column -->
                 <ng-container matColumnDef="desc">
                   <th mat-header-cell *matHeaderCellDef> Description </th>
-                  <td mat-cell *matCellDef="let element"> {{element.userMobile}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.desc}} </td>
                 </ng-container>
           
            
@@ -81,7 +81,7 @@
           
             <mat-form-field class="full-width">
                 
-              <input id="mobileInput" matInput placeholder="Description" formControlName="desc" autocomplete="mobile"
+              <input  matInput placeholder="Description" formControlName="desc" 
               type="text">
               <mat-error  *ngIf="form.controls['desc'].hasError('required')">
                 Description
@@ -93,7 +93,7 @@
                 <mat-label>Roles</mat-label>
                 <mat-select formControlName="rolesIds" multiple>
                  
-                  <mat-option *ngFor="let r of roles" [value]="r.roleId">{{r.roleName}}</mat-option>
+                  <mat-option *ngFor="let r of roles" [value]="r['id']">{{r['name']}}</mat-option>
                 </mat-select>
                 <mat-error  *ngIf="form.controls['rolesIds'].hasError('required')">
                   Group must have at least in 1

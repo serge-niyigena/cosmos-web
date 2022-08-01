@@ -28,15 +28,15 @@ export class ItemService {
   }
 
   createItem(item:ItemDTO){
-    return this.http.post(`${this.baseUrl}/createItem`,item);
+    return this.http.post(`${this.baseUrl}/item/create`,item);
   }
 
   updateItem(item:ItemDTO,itemId:number){
-    return this.http.post(`${this.baseUrl}/updateItem/${itemId}`,item);
+    return this.http.post(`${this.baseUrl}/item/update/${itemId}`,item);
   }
 
-deleteItem(itemId:number){
-    return this.http.post(`${this.baseUrl}/deleteItem`,itemId);
+deleteItem(item:ItemDTO){
+    return this.http.post(`${this.baseUrl}/item/delete`,item);
   }
 
   getItem(id:number): Observable<ItemDTO>{

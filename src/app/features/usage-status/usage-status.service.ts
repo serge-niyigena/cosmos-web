@@ -15,23 +15,23 @@ export class UsageStatusService {
 
   getUsageStatusesList(params:any):Observable<any[]>  {
 
-    return this.http.get<any>( `${this.baseUrl}/itemType`,{params});
+    return this.http.get<any>( `${this.baseUrl}/usageStatus`,{params});
     
   }
 
-  createUsageStatus(itemType:UsageStatusDTO){
-    return this.http.post(`${this.baseUrl}/itemType/create`,itemType);
+  createUsageStatus(usageStatus:UsageStatusDTO){
+    return this.http.post(`${this.baseUrl}/usageStatus/create`,usageStatus);
   }
 
-  updateUsageStatus(itemType:UsageStatusDTO,orgId:number){
-    return this.http.post(`${this.baseUrl}/itemType/update/${orgId}`,itemType);
+  updateUsageStatus(usageStatus:UsageStatusDTO){
+    return this.http.post(`${this.baseUrl}/usageStatus/update`,usageStatus);
   }
 
-deleteUsageStatus(orgId:number){
-    return this.http.post(`${this.baseUrl}/itemType/delete`,orgId);
+deleteUsageStatus(status:UsageStatusDTO){
+    return this.http.post(`${this.baseUrl}/usageStatus/delete`,status);
   }
 
   getUsageStatus(id:number): Observable<UsageStatusDTO>{
-    return this.http.get<UsageStatusDTO>(`${this.baseUrl}/itemType/${id}`);
+    return this.http.get<UsageStatusDTO>(`${this.baseUrl}/usageStatus/${id}`);
   }
 }

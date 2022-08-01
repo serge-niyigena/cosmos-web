@@ -23,12 +23,12 @@ export class ProjectCategoryService {
     return this.http.post(`${this.baseUrl}/projectCategory/create`,projectCategory);
   }
 
-  updateProjectCategory(projectCategory:ProjectCategoryDTO,orgId:number){
-    return this.http.post(`${this.baseUrl}/projectCategory/update/${orgId}`,projectCategory);
+  updateProjectCategory(id:number,projectCategory:ProjectCategoryDTO){
+    return this.http.post(`${this.baseUrl}/projectCategory/update/${id}`,projectCategory);
   }
 
-deleteProjectCategory(orgId:number){
-    return this.http.post(`${this.baseUrl}/projectCategory/delete`,orgId);
+deleteProjectCategory(cat:ProjectCategoryDTO){
+    return this.http.post(`${this.baseUrl}/projectCategory/delete`,cat);
   }
 
   getProjectCategory(id:number): Observable<ProjectCategoryDTO>{

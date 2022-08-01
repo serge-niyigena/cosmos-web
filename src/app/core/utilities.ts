@@ -10,7 +10,7 @@ export class Utilities {
         let params: any = {};
     
         if (searchValue) {
-          params[`client.id`] = searchValue;
+          params[`q`] = searchValue;
         }
     
         if (pgNum) {

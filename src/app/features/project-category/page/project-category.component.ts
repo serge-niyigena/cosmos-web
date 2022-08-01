@@ -120,8 +120,8 @@ export class ProjectCategoryComponent implements OnInit {
 
   if(this.id!==0){
     const org= new ProjectCategoryDTO(this.form.value);
-   
-    this.orgService.updateProjectCategory(org,this.id).subscribe(res => {
+    org.id =this.id;
+    this.orgService.updateProjectCategory(org.id,org).subscribe(res => {
 
     const index = this.projectCategories.findIndex(x=>x.id==this.id);
     this.projectCategories.splice(index,1,res['content']);
@@ -143,7 +143,7 @@ export class ProjectCategoryComponent implements OnInit {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.orgService.deleteProjectCategory(data.id).subscribe(res => {
+        this.orgService.deleteProjectCategory(data).subscribe(res => {
 
           const index = this.projectCategories.findIndex(x=>x.id==data.id);
           this.projectCategories.splice(index,1);

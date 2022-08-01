@@ -7,7 +7,7 @@ import { ProjectFloorDTO } from './dto/project-floor-dto';
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectFloorFloorService {
+export class ProjectFloorService {
 
   baseUrl = environment.baseApiUrl;
   

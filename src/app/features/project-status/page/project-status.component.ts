@@ -29,7 +29,6 @@ export class ProjectStatusComponent implements OnInit {
   sortDirection:string="desc";
   id:number=0;
   
-  pageInfo:PageInfo;
 
   projectStatusesList:ProjectStatusDTO[];
 
@@ -79,11 +78,8 @@ export class ProjectStatusComponent implements OnInit {
 
     const params=Utilities.getRequestParams(this.searchValue,this.page,this.pageSize,this.sortDirection);
     this.orgService.getProjectStatusesList(params,).subscribe(res => {
-    this.projectStatusesList = res['content']['data'];
-    this.pageInfo= res['content']['pageInfo'];
-    this.paginator.pageSize=this.pageInfo.pageSize;
-    this.paginator.pageIndex=this.pageInfo.pageNumber;
-    this.paginator.length=this.pageInfo.totalResults;
+    this.projectStatusesList = res['content'];
+   
   
   });
   }
@@ -103,7 +99,6 @@ export class ProjectStatusComponent implements OnInit {
     this.notificationService.openSnackBar(res['message']);
     
     this.projectStatusesList.unshift(res['content']);
-    this.paginator.pageSize= this.pageInfo.pageSize;
 
     //this.projectStatusesList.push(res['content']);
     this.close();
@@ -119,8 +114,8 @@ export class ProjectStatusComponent implements OnInit {
 
   if(this.id!==0){
     const org= new ProjectStatusDTO(this.form.value);
-   
-    this.orgService.updateProjectStatus(org,this.id).subscribe(res => {
+   org.id=this.id;
+    this.orgService.updateProjectStatus(org).subscribe(res => {
 
     const index = this.projectStatusesList.findIndex(x=>x.id==this.id);
     this.projectStatusesList.splice(index,1,res['content']);
@@ -142,7 +137,7 @@ export class ProjectStatusComponent implements OnInit {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.orgService.deleteProjectStatus(data.id).subscribe(res => {
+        this.orgService.deleteProjectStatus(data).subscribe(res => {
 
           const index = this.projectStatusesList.findIndex(x=>x.id==data.id);
           this.projectStatusesList.splice(index,1);

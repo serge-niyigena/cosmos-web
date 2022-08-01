@@ -23,12 +23,12 @@ export class ItemTypeService {
     return this.http.post(`${this.baseUrl}/itemType/create`,itemType);
   }
 
-  updateItemType(itemType:ItemTypeDTO,orgId:number){
-    return this.http.post(`${this.baseUrl}/itemType/update/${orgId}`,itemType);
+  updateItemType(itemType:ItemTypeDTO){
+    return this.http.post(`${this.baseUrl}/itemType/update`,itemType);
   }
 
-deleteItemType(orgId:number){
-    return this.http.post(`${this.baseUrl}/itemType/delete`,orgId);
+deleteItemType(itemType:ItemTypeDTO){
+    return this.http.post(`${this.baseUrl}/itemType/delete`,itemType);
   }
 
   getItemType(id:number): Observable<ItemTypeDTO>{

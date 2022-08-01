@@ -9,6 +9,7 @@ export class UserSendDTO {
     userReset: string;
     userStatus: string;
     userTypeId: number;
+    userOrgId:number;
 
     constructor(data:any){
         if(data?.groupsIds!=null){
@@ -17,7 +18,7 @@ export class UserSendDTO {
         if(data?.projectsIds!=null){
            this.projectsIds= data.projectsIds 
         }
-        this.userEmail= data.email;
+        this.userEmail= data.userEmail;
         this.userFullName=data.userFullName;
         this.userMobile=data.userMobile;
         if(data?.userPassword!=null){
@@ -26,7 +27,7 @@ export class UserSendDTO {
         this.userReset=data.userReset;
         this.userStatus=data.userStatus;
         this.userTypeId= data.userTypeId;
-       
+        this.userOrgId =data.userOrgId
 
     }
 

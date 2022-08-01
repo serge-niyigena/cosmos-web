@@ -9,8 +9,8 @@ export class ItemDTO {
     constructor(data:any){
         this.name = data['name'];
         this.desc = data['desc'];
-        this.itemCategoryId = data['categoryId'];
-        this.itemUnitTypeId = data['unitTypeId'];
-        this. itemTypeId = data['itemTypeId'];
+        this.itemCategoryId = data['itemCategoryId'];
+        this.itemUnitTypeId = data['itemUnitTypeId'];
+        this.itemTypeId = data['itemTypeId'];
     }
 }

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { GroupData } from './dto/group-data';
 import { GroupDTO } from './dto/group-dto';
 
 @Injectable({
@@ -27,15 +28,15 @@ export class GroupService {
   }
 
   createGroup(group:GroupDTO){
-    return this.http.post(`${this.baseUrl}/createGroup`,group);
+    return this.http.post(`${this.baseUrl}/group/create`,group);
   }
 
   updateGroup(group:GroupDTO,groupId:number){
-    return this.http.post(`${this.baseUrl}/updateGroup/${groupId}`,group);
+    return this.http.post(`${this.baseUrl}/group/update/${groupId}`,group);
   }
 
-deleteGroup(groupId:number){
-    return this.http.post(`${this.baseUrl}/deleteGroup`,groupId);
+deleteGroup(group:GroupData){
+    return this.http.post(`${this.baseUrl}/group/delete`,group);
   }
 
   getGroup(id:number): Observable<GroupDTO>{

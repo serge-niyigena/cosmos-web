@@ -78,12 +78,8 @@ export class UsageStatusComponent implements OnInit {
   private getPaginatedUsageStatuses(){
 
     const params=Utilities.getRequestParams(this.searchValue,this.page,this.pageSize,this.sortDirection);
-    this.orgService.getUsageStatusesList(params,).subscribe(res => {
-    this.usageStatusesList = res['content']['data'];
-    this.pageInfo= res['content']['pageInfo'];
-    this.paginator.pageSize=this.pageInfo.pageSize;
-    this.paginator.pageIndex=this.pageInfo.pageNumber;
-    this.paginator.length=this.pageInfo.totalResults;
+    this.orgService.getUsageStatusesList(params).subscribe(res => {
+    this.usageStatusesList = res['content'];
   
   });
   }
@@ -102,8 +98,7 @@ export class UsageStatusComponent implements OnInit {
     this.orgService.createUsageStatus(org).subscribe(res => {
     this.notificationService.openSnackBar(res['message']);
     
-    this.usageStatusesList.unshift(res['content']);
-    this.paginator.pageSize= this.pageInfo.pageSize;
+    this.usageStatusesList?.unshift(res['content']);
 
     //this.usageStatusesList.push(res['content']);
     this.close();
@@ -119,8 +114,8 @@ export class UsageStatusComponent implements OnInit {
 
   if(this.id!==0){
     const org= new UsageStatusDTO(this.form.value);
-   
-    this.orgService.updateUsageStatus(org,this.id).subscribe(res => {
+   org.id=this.id;
+    this.orgService.updateUsageStatus(org).subscribe(res => {
 
     const index = this.usageStatusesList.findIndex(x=>x.id==this.id);
     this.usageStatusesList.splice(index,1,res['content']);
@@ -142,7 +137,7 @@ export class UsageStatusComponent implements OnInit {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.orgService.deleteUsageStatus(data.id).subscribe(res => {
+        this.orgService.deleteUsageStatus(data).subscribe(res => {
 
           const index = this.usageStatusesList.findIndex(x=>x.id==data.id);
           this.usageStatusesList.splice(index,1);

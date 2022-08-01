@@ -9,6 +9,10 @@ import { Utilities } from 'src/app/core/utilities';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 import { GroupDTO } from '../../group/dto/group-dto';
 import { GroupService } from '../../group/group.service';
+import { OrgDTO } from '../../organization/dto/org-dto';
+import { OrganizationService } from '../../organization/organization.service';
+import { ProjectDataDTO } from '../../project/dto/project-data-dto';
+import { ProjectService } from '../../project/project.service';
 import { UserTypeDTO } from '../../user-type/dto/user-type-dto';
 import { UserTypeService } from '../../user-type/user-type.service';
 import { UserDTO } from '../dto/user-dto';
@@ -23,13 +27,14 @@ import { UserService } from '../user.service';
 export class UserListComponent implements OnInit {
 
  
-  displayedColumns: string[] = ['names', 'mobile','email','type','status','reset','action'];
+  displayedColumns: string[] = ['names', 'mobile','email','org','type','status','reset','action'];
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('orgModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   form: FormGroup;
-  searchValue:string;
+  searchValue:string="";
+  searchParam:string="";
   page:number=0;
   pageSize:number=10;
   sortDirection:string="desc";
@@ -40,16 +45,17 @@ export class UserListComponent implements OnInit {
   usersList:UserDTO[];
   groupsList:GroupDTO[];
   userTypes:UserTypeDTO[];
+  orgsList:OrgDTO[];
+  projectsList:ProjectDataDTO[];
 
-  constructor(private fb: FormBuilder,private orgService:UserService,
+  constructor(private fb: FormBuilder,private userService:UserService,private orgService:OrganizationService,
     private notificationService:NotificationService,private groupService:GroupService,
-     private dialog: MatDialog,private userTypeService:UserTypeService) { }
+     private dialog: MatDialog,private userTypeService:UserTypeService,private projectService:ProjectService) { }
 
   ngOnInit(): void {
    
     this.getPaginatedUsers();
-    this.getAllGroups();
-    this.getUserTypes();
+   
   }
 
 
@@ -62,7 +68,8 @@ export class UserListComponent implements OnInit {
         userStatus: ['', [Validators.required]],
         userReset: ['', [Validators.required]],
         groupsIds: [[],[Validators.required]],
-        projectsIds: [[],[]]
+        projectsIds: [[],[]],
+        userOrgId:['',[Validators.required]],
     });
     }
 
@@ -76,15 +83,19 @@ export class UserListComponent implements OnInit {
         userMobile: data.userMobile,
         userTypeId: data.userType.id,
         userStatus: data.userStatus,
-        userReset: data.userStatus,
-        groupsIds: [[],[Validators.required]],
-        projectsIds: [[data.projects.forEach(x=>x.id)],[Validators.required]]
+        userReset: data.userReset,
+        userOrgId: data.userOrg.id,
+        groupsIds: data.groups.map(x=>x.id),
+        projectsIds: data.projects.map(x=>x.id)
   });
-   this.form.get('groupsIds')?.setValue(data.groups.map(x=>x.id));
   }
 
 
   openDialog(data:any) {
+    this.getAllGroups();
+    this.getUserTypes();
+    this.getOrganizations();
+    this.getProjects();
     this.initiateForm();
     
     if(data!=null){
@@ -99,10 +110,20 @@ export class UserListComponent implements OnInit {
 }
 
 
-  private getPaginatedUsers(){
+  public getPaginatedUsers(){
 
-    const params=Utilities.getRequestParams(this.searchValue,this.page,this.pageSize,this.sortDirection);
-    this.orgService.getUsersList(params,).subscribe(res => {
+    if(this.isAnumber(this.searchValue)){
+      this.searchParam="userMobileEQ";
+    }
+    if(!this.isAnumber(this.searchValue) &&this.searchValue!=="" && !this.searchValue?.includes('@')){
+      this.searchParam="userFullNameEQ";
+    }
+
+    if(!this.isAnumber(this.searchValue) && this.searchValue?.includes('@')){
+      this.searchParam="userEmailEQ";
+    }
+    const params=Utilities.getRequestParams(this.searchParam+this.searchValue,this.page,this.pageSize,this.sortDirection);
+    this.userService.getUsersList(params,).subscribe(res => {
     this.usersList = res['content']['data'];
     this.pageInfo= res['content']['pageInfo'];
     this.paginator.pageSize=this.pageInfo.pageSize;
@@ -118,9 +139,23 @@ export class UserListComponent implements OnInit {
     });
   }
 
+  getProjects(){
+    this.projectService.getAllProjects().subscribe(res=>{
+      this.projectsList=res['content']['data'];
+    })
+  }
+
+  getOrganizations(){
+    this.orgService.getOrganizationsList(null).subscribe(res=>{
+      this.orgsList= res['content']['data'];
+      console.log(this.orgsList)
+    })
+  }
+
   getUserTypes(){
-    this.userTypeService.getUserTypesList(null).subscribe(res=>{
+    this.userTypeService.getUserTypesList().subscribe(res=>{
       this.userTypes= res['content'];
+      console.log(this.userTypes)
     });
   }
 
@@ -136,28 +171,28 @@ export class UserListComponent implements OnInit {
     if(this.id==0){
      const user= new UserSendDTO(this.form.value);
      console.log(JSON.stringify(user))
-  //   this.orgService.createUser(user).subscribe(res => {
-  //   this.notificationService.openSnackBar(res['message']);
+    this.userService.createUser(user).subscribe(res => {
+    this.notificationService.openSnackBar(res['message']);
     
-  //   this.usersList.unshift(res['content']);
-  //   this.paginator.pageSize= this.pageInfo.pageSize;
+    this.usersList.unshift(res['content']);
+    this.paginator.pageSize= this.pageInfo.pageSize;
 
-  //   //this.usersList.push(res['content']);
-  //   this.close();
+    //this.usersList.push(res['content']);
+    this.close();
     
-  //   },
-  //   error => {
-  //     console.log(error)
-  //     this.notificationService.openSnackBar(error.error.message);
+    },
+    error => {
+      console.log(error)
+      this.notificationService.openSnackBar(error.error.message);
   
-  // }
-  //   );
+  }
+    );
   }
 
   if(this.id!==0){
     const user= new UserSendDTO(this.form.value);
    
-    this.orgService.updateUser(user,this.id).subscribe(res => {
+    this.userService.updateUser(user,this.id).subscribe(res => {
 
     const index = this.usersList.findIndex(x=>x.id==this.id);
     this.usersList.splice(index,1,res['content']);
@@ -168,6 +203,7 @@ export class UserListComponent implements OnInit {
   }
 
   delete(data:UserDTO){
+    
     // let's call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
@@ -179,7 +215,7 @@ export class UserListComponent implements OnInit {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.orgService.deleteUser(data.id).subscribe(res => {
+        this.userService.deleteUser(data).subscribe(res => {
 
           const index = this.usersList.findIndex(x=>x.id==data.id);
           this.usersList.splice(index,1);
@@ -190,6 +226,10 @@ export class UserListComponent implements OnInit {
       
    });
   
+  }
+
+  private isAnumber(value:string): boolean {
+    return /^\d+$/.test(value);
   }
 
 }
