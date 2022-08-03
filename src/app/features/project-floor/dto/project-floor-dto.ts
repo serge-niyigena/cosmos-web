@@ -1,17 +1,17 @@
 export class ProjectFloorDTO {
-      id:number;
-      pFloorValue:string;
-      pFloorRef:string;
-      pFloorMeasurement:number;
-      pFloorDescription:string;
+      
+      floorValue:string;
+      floorRef:string;
+      floorMeasurement:number;
+      floorDescription:string;
       statusId:number;
       projectId:number;
 
       constructor(data:any){
-            this.pFloorValue = data['pFloorValue'];
-            this.pFloorRef = data['pFloorRef'];
-            this.pFloorMeasurement = data['pFloorMeasurement'];
-            this.pFloorDescription = data['pFloorDescription'];
+            this.floorValue = data['pFloorValue'];
+            this.floorRef = data['pFloorRef'];
+            this.floorMeasurement = data['pFloorMeasurement'];
+            this.floorDescription = data['pFloorDescription'];
             this.statusId = data['statusId'];
             this.projectId = data['projectId'];
       }

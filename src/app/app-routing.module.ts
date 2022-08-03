@@ -20,6 +20,12 @@ const appRoutes: Routes = [
   },
 
   {
+    path: 'floor-item',
+    loadChildren: () => import('./features/floor-item/module/floor-item.module').then(m => m.FloorItemModule),
+    canActivate: [AuthGuard]
+  },
+
+  {
     path: 'item',
     loadChildren: () => import('./features/item/module/item.module').then(m => m.ItemModule),
     canActivate: [AuthGuard]

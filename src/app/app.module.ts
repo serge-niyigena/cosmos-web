@@ -14,8 +14,7 @@ import { FloorItemComponent } from './features/floor-item/page/floor-item.compon
 
 @NgModule({
   declarations: [
-    AppComponent,
-    FloorItemComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,

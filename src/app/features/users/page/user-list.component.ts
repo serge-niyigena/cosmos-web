@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 import { PageInfo } from 'src/app/core/dtos/page-info';
 import { NotificationService } from 'src/app/core/services/notification.service';
@@ -39,6 +39,8 @@ export class UserListComponent implements OnInit {
   pageSize:number=10;
   sortDirection:string="desc";
   id:number=0;
+
+  create:boolean=false;
   
   pageInfo:PageInfo;
 
@@ -60,6 +62,7 @@ export class UserListComponent implements OnInit {
 
 
   initiateForm(){
+    if(!this.create){
       this.form = this.fb.group({
         userFullName: ['', [Validators.required]],
         userEmail: ['', [Validators.required,Validators.email]],
@@ -71,6 +74,22 @@ export class UserListComponent implements OnInit {
         projectsIds: [[],[]],
         userOrgId:['',[Validators.required]],
     });
+  }
+  if(this.create){
+    this.form = this.fb.group({
+      userFullName: ['', [Validators.required]],
+      userEmail: ['', [Validators.required,Validators.email]],
+      userMobile: ['', [Validators.required]],
+      userTypeId: ['', [Validators.required]],
+      userStatus: ['', [Validators.required]],
+      userPassword: ['', [Validators.required]],
+      userReset: ['', [Validators.required]],
+      groupsIds: [[],[Validators.required]],
+      projectsIds: [[],[]],
+      userOrgId:['',[Validators.required]],
+     
+  });
+}
     }
 
 
@@ -92,21 +111,31 @@ export class UserListComponent implements OnInit {
 
 
   openDialog(data:any) {
+    if(data==null){
+      this.create=true;
+    }
     this.getAllGroups();
     this.getUserTypes();
     this.getOrganizations();
     this.getProjects();
     this.initiateForm();
-    
+   
     if(data!=null){
     this.id=data.id;
     this.update(data);
+    this.create=false;
     }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     this.dialog.open(this.customTemplate, dialogConfig);
   
+}
+
+handlePageEvent(event: PageEvent): void {
+  this.page = event.pageIndex;
+  this.pageSize = event.pageSize;
+  this.getPaginatedUsers();
 }
 
 
@@ -141,7 +170,8 @@ export class UserListComponent implements OnInit {
 
   getProjects(){
     this.projectService.getAllProjects().subscribe(res=>{
-      this.projectsList=res['content']['data'];
+      this.projectsList=res['content'];
+      console.log(this.projectsList)
     })
   }
 

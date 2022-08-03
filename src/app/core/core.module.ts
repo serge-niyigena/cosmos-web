@@ -10,6 +10,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { throwIfAlreadyLoaded } from './guards/module-import.guard';
 import { GlobalErrorHandler } from './services/globar-error.handler';
 import { AdminGuard } from './guards/admin.guard';
+import { ErrorInterceptor } from './interceptors/error-interceptor';
 
 @NgModule({
   imports: [
@@ -33,11 +34,15 @@ import { AdminGuard } from './guards/admin.guard';
       multi: true
     },
     {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true
+    },
+    {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler
     },
-    { provide: NGXLogger, useClass: NGXLogger },
-    { provide: 'LOCALSTORAGE', useValue: window.localStorage }
+    { provide: NGXLogger, useClass: NGXLogger }
   ],
   exports: [
   ]

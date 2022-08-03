@@ -14,7 +14,7 @@ export class Utilities {
         }
     
         if (pgNum) {
-          params[`pgNum`] = pgNum - 1;
+          params[`pgNum`] = pgNum;
         }
     
         if (pgSize) {

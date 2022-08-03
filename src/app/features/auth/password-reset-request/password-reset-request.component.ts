@@ -33,20 +33,20 @@ export class PasswordResetRequestComponent implements OnInit {
       .subscribe((val: string) => { this.email = val.toLowerCase(); });
   }
 
-  resetPassword() {
-    this.loading = true;
-    this.authService.passwordResetRequest(this.email)
-      .subscribe(
-        results => {
-          this.router.navigate(['/auth/login']);
-          this.notificationService.openSnackBar('Password verification mail has been sent to your email address.');
-        },
-        error => {
-          this.loading = false;
-          this.notificationService.openSnackBar(error.error);
-        }
-      );
-  }
+   resetPassword() {
+  //   this.loading = true;
+  //   this.authService.passwordResetRequest(this.email)
+  //     .subscribe(
+  //       results => {
+  //         this.router.navigate(['/auth/login']);
+  //         this.notificationService.openSnackBar('Password verification mail has been sent to your email address.');
+  //       },
+  //       error => {
+  //         this.loading = false;
+  //         this.notificationService.openSnackBar(error.error);
+  //       }
+  //     );
+   }
 
   cancel() {
     this.router.navigate(['/']);

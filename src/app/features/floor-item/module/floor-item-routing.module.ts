@@ -1,6 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from 'src/app/shared/shared.module';
 import { FloorItemComponent } from '../page/floor-item.component';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from 'src/app/shared/layout/layout.component';

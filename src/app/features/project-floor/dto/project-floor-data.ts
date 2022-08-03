@@ -3,10 +3,10 @@ import { ProjectDataDTO } from "../../project/dto/project-data-dto";
 
 export class ProjectFloorData {
     id:number;
-    pFloorValue:string;
-    pFloorRef:string;
-    pFloorMeasurement:number;
-    pFloorDescription:string;
-    pFloorProject:ProjectDataDTO;
-    pFloorStatus:ProjectStatusDTO;
+    floorValue:string;
+    floorRef:string;
+    floorMeasurement:number;
+    floorDescription:string;
+    floorProject:ProjectDataDTO;
+    floorStatus:ProjectStatusDTO;
 }

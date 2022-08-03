@@ -6,7 +6,7 @@ import { Title } from '@angular/platform-browser';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { PageInfo } from 'src/app/core/dtos/page-info';
 import { Utilities } from 'src/app/core/utilities';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
@@ -25,18 +25,20 @@ import { ProjectService } from '../../project/project.service';
 })
 export class ProjectFloorFloorComponent implements OnInit {
 
-  displayedColumns: string[] = ['floor', 'projectFloor','ref','measurement','desc','status','action'];
+  displayedColumns: string[] = ['project', 'floor','ref','measurement','desc','status','items','action'];
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('orgModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   form: FormGroup;
   searchValue:string;
+  projFilter:string="";
   page:number=0;
   pageSize:number=10;
   sortDirection:string="desc";
   id:number=0;
-  
+  pFloorFilter:string="";
+  projectId:number=0;
   pageInfo:PageInfo;
 
   projectFloorsList:ProjectFloorData[];
@@ -74,15 +76,21 @@ export class ProjectFloorFloorComponent implements OnInit {
   update(data:ProjectFloorData){
    
     this.form.patchValue({
-      projectId: data.pFloorProject.id,
-      pFloorValue: data.pFloorValue,
-      pFloorRef: data.pFloorRef,
-      pFloorMeasurement: data.pFloorMeasurement,
-      pFloorDescription: data.pFloorDescription,
-      statusId: data.pFloorStatus.id
+      projectId: data.floorProject.id,
+      pFloorValue: data.floorValue,
+      pFloorRef: data.floorRef,
+      pFloorMeasurement: data.floorMeasurement,
+      pFloorDescription: data.floorDescription,
+      statusId: data.floorStatus.id
   });
   }
 
+
+  handlePageEvent(event: PageEvent): void {
+    this.page = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getPaginatedProjectFloors();
+  }
 
   openDialog(data:any) {
     this.initiateForm();
@@ -99,9 +107,10 @@ export class ProjectFloorFloorComponent implements OnInit {
 }
 
 
-  private getPaginatedProjectFloors(){
+  public getPaginatedProjectFloors(){
 
-    const params=Utilities.getRequestParams(this.searchValue,this.page,this.pageSize,this.sortDirection);
+    this.pFloorFilter="projectFloorProject.idEQ"+this.projectId;
+    const params=Utilities.getRequestParams(this.pFloorFilter,this.page,this.pageSize,this.sortDirection);
     this.projectFloorService.getProjectFloorsList(params).subscribe(res => {
     this.projectFloorsList = res['content']['data'];
     this.pageInfo= res['content']['pageInfo'];
@@ -113,8 +122,10 @@ export class ProjectFloorFloorComponent implements OnInit {
   }
 
   getProjects(){
-    this.projectService.getProjectsList(null).subscribe(res=>{
-      this.projectsList= res['content'];
+    this.projFilter="users.projectUserUsers.idEQ1"
+    const params= Utilities.getRequestParams(this.projFilter,0,100,this.sortDirection);
+    this.projectService.getProjectsList(params).subscribe(res=>{
+      this.projectsList= res['content']['data'];
     });
   }
 
@@ -136,23 +147,23 @@ export class ProjectFloorFloorComponent implements OnInit {
   save(){
     if(this.id==0){
      const projectFloor= new ProjectFloorDTO(this.form.value);
-     console.log(JSON.stringify(projectFloor))
-  //   this.orgService.createProjectFloor(projectFloor).subscribe(res => {
-  //   this.notificationService.openSnackBar(res['message']);
+     console.log("Data: "+JSON.stringify(projectFloor))
+    this.projectFloorService.createProjectFloor(projectFloor).subscribe(res => {
+    this.notificationService.openSnackBar(res['message']);
     
-  //   this.projectFloorsList.unshift(res['content']);
-  //   this.paginator.pageSize= this.pageInfo.pageSize;
+    this.projectFloorsList.unshift(res['content']);
+    this.paginator.pageSize= this.pageInfo.pageSize;
 
-  //   //this.projectFloorsList.push(res['content']);
-  //   this.close();
+    //this.projectFloorsList.push(res['content']);
+    this.close();
     
-  //   },
-  //   error => {
-  //     console.log(error)
-  //     this.notificationService.openSnackBar(error.error.message);
+    },
+    error => {
+      console.log(error)
+      this.notificationService.openSnackBar(error.error.message);
   
-  // }
-  //   );
+  }
+    );
   }
 
   if(this.id!==0){
@@ -168,19 +179,19 @@ export class ProjectFloorFloorComponent implements OnInit {
   }
   }
 
-  delete(data:ProjectFloorDTO){
+  delete(data:ProjectFloorData){
     // let's call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
       data: {
           title: "Are you sure?",
-          message: "You are about to delete project floor: "+data.pFloorValue}
+          message: "You are about to delete project floor: "+data.floorValue}
     });
   
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.projectFloorService.deleteProjectFloor(data.id).subscribe(res => {
+        this.projectFloorService.deleteProjectFloor(data).subscribe(res => {
           const index = this.projectFloorsList.findIndex(x=>x.id==data.id);
           this.projectFloorsList.splice(index,1);
           this.notificationService.openSnackBar(res['message']);

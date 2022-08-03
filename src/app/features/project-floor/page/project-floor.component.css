@@ -5,3 +5,18 @@ table {
 th.mat-sort-header-sorted {
     color: black;
 }
+
+#floorItemsLink{
+    color: blue !important;
+}
+
+
+#filter {
+    float:left;
+    
+}
+
+#search {
+    float:right;
+    
+}

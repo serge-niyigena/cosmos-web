@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { ProjectFloorData } from './dto/project-floor-data';
 import { ProjectFloorDTO } from './dto/project-floor-dto';
 
 @Injectable({
@@ -20,16 +21,16 @@ export class ProjectFloorService {
     
   }
 
-  createProjectFloor(projectFloor:ProjectFloorDTO){
-    return this.http.post(`${this.baseUrl}/createProjectFloor`,projectFloor);
+  createProjectFloor(projectFloor:any){
+    return this.http.post(`${this.baseUrl}/projectFloor/create`,projectFloor);
   }
 
   updateProjectFloor(projectFloor:ProjectFloorDTO,projectFloorId:number){
-    return this.http.post(`${this.baseUrl}/updateProjectFloor/${projectFloorId}`,projectFloor);
+    return this.http.post(`${this.baseUrl}/projectFloor/update/${projectFloorId}`,projectFloor);
   }
 
-deleteProjectFloor(projectFloorId:number){
-    return this.http.post(`${this.baseUrl}/deleteProjectFloor`,projectFloorId);
+deleteProjectFloor(projectFloor:ProjectFloorData){
+    return this.http.post(`${this.baseUrl}/projectFloor/delete`,projectFloor);
   }
 
   getProjectFloor(id:number): Observable<ProjectFloorDTO>{

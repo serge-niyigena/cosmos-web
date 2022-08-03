@@ -7,61 +7,89 @@
 
         <div class="container">
          
-             <div class="mt10 pl10 pr9" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="flex-end">
-             
-             <mat-form-field>
-              <mat-placeholder>Search</mat-placeholder>
-              <input matInput type="search" [(ngModel)]="searchValue">
-              <button mat-icon-button matSuffix color="primary" aria-label="search">
-                <mat-icon>search</mat-icon>
-              </button>
-            </mat-form-field>
-            <button mat-flat-button color="primary" class="createBtn" (click)="openDialog(null)">Create<mat-icon>add</mat-icon></button>
+        
+             <div class="row" fxLayoutGap="20px" >
+             <div class="col" id="filter">
+              <mat-form-field >
+                <mat-label>Filter floor by project</mat-label>
+                <mat-select [(ngModel)]="projectId" (selectionChange)="getPaginatedProjectFloors()">
+                 
+                  <mat-option *ngFor="let p of projectsList" [value]="p.id">{{p.name}}</mat-option>
+                </mat-select>
+              
+              </mat-form-field>
+             </div>
+              
+            <div class="col" id="search">
+              <mat-form-field>
+                <mat-placeholder>Search</mat-placeholder>
+                <input matInput type="search" [(ngModel)]="searchValue">
+                <button mat-icon-button matSuffix color="primary" aria-label="search">
+                  <mat-icon>search</mat-icon>
+                </button>
+              </mat-form-field>
+              <button mat-flat-button color="primary" class="createBtn" (click)="openDialog(null)">Create<mat-icon>add</mat-icon></button>
          
+            </div>
+            
+           
             </div>
             
             <table mat-table  [dataSource]="projectFloorsList" #myTable class="my-table mat-elevation-z8">
           
               <!-- Position Column -->
-              <ng-container matColumnDef="floor">
-                <th mat-header-cell *matHeaderCellDef> Floor </th>
-                <td mat-cell *matCellDef="let element"> {{element.pFloorValue}} </td>
+              <ng-container matColumnDef="project">
+                <th mat-header-cell *matHeaderCellDef> Project </th>
+                <td mat-cell *matCellDef="let element"> {{element.floorProject.name}} </td>
               </ng-container>
           
 
-              <ng-container matColumnDef="projectFloor">
-                  <th mat-header-cell *matHeaderCellDef> Reference </th>
-                  <td mat-cell *matCellDef="let element"> {{element.pFloorProject.name}} </td>
+              <ng-container matColumnDef="floor">
+               
+  
+                  <th mat-header-cell *matHeaderCellDef> Floor </th>
+                  <td mat-cell *matCellDef="let element">  {{element.floorValue}} </td>
                 </ng-container>
             
             
               <ng-container matColumnDef="ref">
-                <th mat-header-cell *matHeaderCellDef> Description </th>
-                <td mat-cell *matCellDef="let element"> {{element.pFloorRef}} </td>
+                <th mat-header-cell *matHeaderCellDef> Reference </th>
+                <td mat-cell *matCellDef="let element"> {{element.floorRef}} </td>
               </ng-container>
         
              
               <ng-container matColumnDef="measurement">
-                <th mat-header-cell *matHeaderCellDef> WEF </th>
-                <td mat-cell *matCellDef="let element"> {{element.pFloorMeasurement}} </td>
+                <th mat-header-cell *matHeaderCellDef> Measurement </th>
+                <td mat-cell *matCellDef="let element"> {{element.floorMeasurement}} </td>
               </ng-container>
           
               <!-- Weight Column -->
               <ng-container matColumnDef="desc">
-                <th mat-header-cell *matHeaderCellDef> WET </th>
-                <td mat-cell *matCellDef="let element"> {{element.pFloorDescription}} </td>
+                <th mat-header-cell *matHeaderCellDef> Description </th>
+                <td mat-cell *matCellDef="let element"> {{element.floorDescription}} </td>
               </ng-container>
 
                 <!-- Weight Column -->
                 <ng-container matColumnDef="status">
-                  <th mat-header-cell *matHeaderCellDef> Selection type </th>
-                  <td mat-cell *matCellDef="let element"> {{element.pFloorStatus.name}} </td>
+                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                  <td mat-cell *matCellDef="let element"> {{element.floorStatus.name}} </td>
                 </ng-container>
+
+                <ng-container matColumnDef="items">
+                  <th mat-header-cell *matHeaderCellDef> Items </th>
+                  <td mat-cell *matCellDef="let element"> <a id="floorItemsLink"  [routerLink]="['/floor-item']" [state]="{ data:element}">
+                    Floor items
+                  </a></td>
+                </ng-container>
+
+                
         
               <!-- Action Column-->
             <ng-container matColumnDef="action">
-              <th mat-header-cell *matHeaderCellDef > Actions </th>
+
+              <th mat-header-cell *matHeaderCellDef class="text-center" > Actions </th>
               <td mat-cell *matCellDef="let element"> 
+
                 <button mat-icon-button matTooltip="Click to Edit" (click)="openDialog(element)" class="iconbutton" color="accent" >
                   <mat-icon>edit</mat-icon>
                 </button>
@@ -79,7 +107,7 @@
           
             <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                            
-                           
+                           (page)="handlePageEvent($event)"
                            showFirstLastButtons 
                            aria-label="Select page of periodic elements">
             </mat-paginator>
@@ -92,22 +120,22 @@
 
           <mat-form-field class="full-width">
             <mat-label>Project</mat-label>
-            <mat-select formControlName="statusId" multiple>
+            <mat-select formControlName="projectId">
              
               <mat-option *ngFor="let p of projectsList" [value]="p.id">{{p.name}}</mat-option>
             </mat-select>
-            <mat-error  *ngIf="form.controls['statusId'].hasError('required')">
-              project category
+            <mat-error  *ngIf="form.controls['projectId'].hasError('required')">
+              project is
               <strong>required</strong>
           </mat-error> 
           </mat-form-field>
           
           <mat-form-field class="full-width">
               
-            <input id="nameInput" matInput placeholder="Value" formControlName="pFloorValue" autocomplete="name"
-            type="name">
+            <input matInput placeholder="Value" formControlName="pFloorValue" autocomplete="name"
+            type="text">
             <mat-error  *ngIf="form.controls['pFloorValue'].hasError('required')">
-              project name is
+              floor value is
               <strong>required</strong>
           </mat-error>
                     
@@ -118,7 +146,7 @@
             <input  matInput placeholder="Reference" formControlName="pFloorRef" autocomplete="pFloorRef"
             type="text">
             <mat-error  *ngIf="form.controls['pFloorRef'].hasError('required')">
-              Description is
+              Floor reference is
               <strong>required</strong>
           </mat-error>  
           </mat-form-field>
@@ -128,9 +156,9 @@
             <mat-form-field class="full-width">
               
               <input matInput placeholder="Measurement" formControlName="pFloorMeasurement" autocomplete="pFloorMeasurement"
-              type="string">
+              type="number">
                        <mat-error *ngIf="form.controls['pFloorMeasurement'].hasError('required')">
-                          selection type is
+                          Floor measurement is
                           <strong>required</strong>
                     </mat-error>
             </mat-form-field>
@@ -140,7 +168,7 @@
               <input matInput placeholder="Description" formControlName="pFloorDescription" autocomplete="pFloorDescription"
               type="string">
                        <mat-error *ngIf="form.controls['pFloorDescription'].hasError('required')">
-                          selection type is
+                          Description is
                           <strong>required</strong>
                     </mat-error>
             </mat-form-field>
@@ -148,8 +176,8 @@
           
 
             <mat-form-field class="full-width">
-              <mat-label>Poject status</mat-label>
-              <mat-select formControlName="statusId" multiple>
+              <mat-label>Floor status</mat-label>
+              <mat-select formControlName="statusId">
                
                 <mat-option *ngFor="let s of statusList" [value]="s.id">{{s.name}}</mat-option>
               </mat-select>

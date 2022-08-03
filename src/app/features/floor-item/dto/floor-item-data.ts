@@ -8,7 +8,7 @@ export class FloorItemData {
     floorItemMaximumQuantity:number;
     floorItemUsedQuantity:number;
     floorItemStatusReport:string;
-    floorItem:ItemData;
-    floorItemProjFloor:ProjectFloorData;
+    floorItemItem:ItemData;
+    projectFloor:ProjectFloorData;
     floorItemStatus:UsageStatusDTO;
 }

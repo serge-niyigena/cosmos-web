@@ -43,13 +43,13 @@
                 <!-- Name Column -->
                 <ng-container matColumnDef="wef">
                   <th mat-header-cell *matHeaderCellDef> WEF </th>
-                  <td mat-cell *matCellDef="let element"> {{element.projWef}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.projWef |date}} </td>
                 </ng-container>
             
                 <!-- Weight Column -->
                 <ng-container matColumnDef="wet">
                   <th mat-header-cell *matHeaderCellDef> WET </th>
-                  <td mat-cell *matCellDef="let element"> {{element.projWef}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.projWet |date}} </td>
                 </ng-container>
   
                   <!-- Weight Column -->
@@ -61,18 +61,18 @@
                 <!-- Weight Column -->
                 <ng-container matColumnDef="org">
                   <th mat-header-cell *matHeaderCellDef> Organization </th>
-                  <td mat-cell *matCellDef="let element"> {{element.projOrganization}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.projOrganization.name}} </td>
                 </ng-container>
 
                  <!-- Weight Column -->
                  <ng-container matColumnDef="category">
                     <th mat-header-cell *matHeaderCellDef> Category </th>
-                    <td mat-cell *matCellDef="let element"> {{element.projCategory.name}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.projectCategory.name}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="creationDate">
-                    <th mat-header-cell *matHeaderCellDef> Reset </th>
-                    <td mat-cell *matCellDef="let element"> {{element.creationDate}} </td>
+                    <th mat-header-cell *matHeaderCellDef> CreatedOn </th>
+                    <td mat-cell *matCellDef="let element"> {{element.creationDate | date}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="status">
@@ -101,7 +101,7 @@
             
               <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                              
-                             
+                             (page)="handlePageEvent($event)"
                              showFirstLastButtons 
                              aria-label="Select page of periodic elements">
               </mat-paginator>
@@ -111,11 +111,23 @@
               <h2 mat-dialog-title class="text-center">Project</h2>
           
           <mat-dialog-content [formGroup]="form">
+
+            <mat-form-field class="full-width">
+              <mat-label>Project organization</mat-label>
+              <mat-select formControlName="organizationId">
+               
+                <mat-option *ngFor="let o of orgsList" [value]="o.id">{{o.name}}</mat-option>
+              </mat-select>
+              <mat-error  *ngIf="form.controls['organizationId'].hasError('required')">
+                project organization
+                <strong>required</strong>
+            </mat-error> 
+            </mat-form-field>
             
             <mat-form-field class="full-width">
                 
               <input id="nameInput" matInput placeholder="Name" formControlName="name" autocomplete="name"
-              type="name">
+              type="text">
               <mat-error  *ngIf="form.controls['name'].hasError('required')">
                 project name is
                 <strong>required</strong>
@@ -145,14 +157,16 @@
                 <mat-date-range-picker #picker></mat-date-range-picker>
               
                 <mat-error *ngIf="form.controls['projWef'].hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                <mat-error *ngIf="form.controls['projWef'].hasError('required')">Start date required</mat-error>
                 <mat-error *ngIf="form.controls['projWet'].hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                <mat-error *ngIf="form.controls['projWet'].hasError('required')">End date required</mat-error>
               </mat-form-field>
             <!--  -->
           
               <mat-form-field class="full-width">
                 
-                <input matInput placeholder="Selection type" formControlName="selectionType" autocomplete="selectionType"
-                type="string">
+                <input matInput placeholder="Selection type" formControlName="selectionType" [readonly] = "true" autocomplete="selectionType"
+                type="text">
                          <mat-error *ngIf="form.controls['selectionType'].hasError('required')">
                             selection type is
                             <strong>required</strong>
@@ -161,7 +175,7 @@
 
               <mat-form-field class="full-width">
                 <mat-label>Project category</mat-label>
-                <mat-select formControlName="statusId" multiple>
+                <mat-select formControlName="categoryId">
                  
                   <mat-option *ngFor="let c of categories" [value]="c.id">{{c.name}}</mat-option>
                 </mat-select>
@@ -173,7 +187,7 @@
   
               <mat-form-field class="full-width">
                 <mat-label>Poject status type</mat-label>
-                <mat-select formControlName="statusId" multiple>
+                <mat-select formControlName="statusId">
                  
                   <mat-option *ngFor="let s of statusList" [value]="s.id">{{s.name}}</mat-option>
                 </mat-select>

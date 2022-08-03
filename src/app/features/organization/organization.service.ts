@@ -20,6 +20,12 @@ export class OrganizationService {
     
   }
 
+  getAllOrganizationsList():Observable<any[]>  {
+
+    return this.http.get<any>( `${this.baseUrl}/organization/all`);
+    
+  }
+
   createOrganization(organization:OrgDTO){
     return this.http.post(`${this.baseUrl}/organization/create`,organization);
   }

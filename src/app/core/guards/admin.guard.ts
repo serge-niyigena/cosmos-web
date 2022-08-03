@@ -5,13 +5,12 @@ import { AuthenticationService } from '../services/auth.service';
 @Injectable()
 export class AdminGuard implements CanActivate {
 
-    constructor(private router: Router,
-        private authService: AuthenticationService) { }
+    constructor(private router: Router, private authService: AuthenticationService) { }
 
     canActivate() {
-        const user = this.authService.getCurrentUser();
+        const user = this.authService.currentUserValue;
 
-        if (user && user.isAdmin) {
+        if (user && user.content['token']) {
             return true;
 
         } else {

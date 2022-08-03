@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { FloorItemData } from './dto/floor-item-data';
 import { FloorItemDTO } from './dto/floor-item-dto';
 
 @Injectable({
@@ -21,15 +22,21 @@ export class FloorItemService {
   }
 
   createFloorItem(floorItem:FloorItemDTO){
-    return this.http.post(`${this.baseUrl}/createFloorItem`,floorItem);
+    return this.http.post(`${this.baseUrl}/floorItem/create`,floorItem);
   }
 
   updateFloorItem(floorItem:FloorItemDTO,floorItemId:number){
-    return this.http.post(`${this.baseUrl}/updateFloorItem/${floorItemId}`,floorItem);
+    return this.http.post(`${this.baseUrl}/floorItem/update/${floorItemId}`,floorItem);
   }
 
-deleteFloorItem(floorItemId:number){
-    return this.http.post(`${this.baseUrl}/deleteFloorItem`,floorItemId);
+  updateFloorItemUsage(floorItemId:number,usage:FloorItemDTO){
+    return this.http.post(`${this.baseUrl}/floorItem/used/update/${floorItemId}`,usage);
+  }
+
+  
+
+deleteFloorItem(floorItem:FloorItemData){
+    return this.http.post(`${this.baseUrl}/floorItem/delete`,floorItem);
   }
 
   getFloorItem(id:number): Observable<FloorItemDTO>{

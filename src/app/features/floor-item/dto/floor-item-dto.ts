@@ -13,7 +13,7 @@ export class FloorItemDTO {
         this.floorItemUsedQuantity = data['floorItemUsedQuantity'];
         this.floorItemStatusReport = data['floorItemStatusReport'];
         this.floorItemProjectFloorId = data['floorItemProjectFloorId'];
-        this.floorItemStatusId = data['floorItemStatusId'];
+        this.floorItemItemId = data['floorItemItemId'];
     }
 }
 

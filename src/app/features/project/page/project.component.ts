@@ -1,12 +1,14 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 import { PageInfo } from 'src/app/core/dtos/page-info';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { Utilities } from 'src/app/core/utilities';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
+import { OrgDTO } from '../../organization/dto/org-dto';
+import { OrganizationService } from '../../organization/organization.service';
 import { ProjectCategoryDTO } from '../../project-category/dto/project-category-dto';
 import { ProjectCategoryService } from '../../project-category/project-category.service';
 import { ProjectStatusDTO } from '../../project-status/dto/project-status-dto';
@@ -41,11 +43,12 @@ export class ProjectComponent {
   projectsList:ProjectDataDTO[];
   usersList:UserDTO[];
   statusList:ProjectStatusDTO[];
-  categories:ProjectCategoryDTO[]
-;
-  constructor(private fb: FormBuilder,private orgService:ProjectService,private userService:UserService,
+  categories:ProjectCategoryDTO[];
+  orgsList:OrgDTO[];
+
+  constructor(private fb: FormBuilder,private projectService:ProjectService,private userService:UserService,
     private notificationService:NotificationService,private statusService:ProjectStatusService,
-     private dialog: MatDialog,private projectCategoryService:ProjectCategoryService) { }
+     private dialog: MatDialog,private orgService:OrganizationService,private projectCategoryService:ProjectCategoryService) { }
 
   ngOnInit(): void {
    
@@ -53,6 +56,7 @@ export class ProjectComponent {
     this.getAllprojectUsers();
     this.getProjectCategories();
     this.getProjectStatuses();
+    this.getOrganizations();
   }
 
 
@@ -62,7 +66,7 @@ export class ProjectComponent {
         desc: ['', [Validators.required]],
         projWef: ['', [Validators.required]],
         projWet: ['', [Validators.required]],
-        selectionType: [{value:'Square feet', disabled: true} ,[Validators.required]],
+        selectionType: ['Square feet',[Validators.required]],
         organizationId:['',[Validators.required]],
         statusId: ['', [Validators.required]],
         categoryId: [[],[Validators.required]],
@@ -102,16 +106,24 @@ export class ProjectComponent {
   
 }
 
+handlePageEvent(event: PageEvent): void {
+  this.page = event.pageIndex;
+  this.pageSize = event.pageSize;
+  this.getPaginatedProjects();
+}
+
 
   private getPaginatedProjects(){
 
     const params=Utilities.getRequestParams(this.searchValue,this.page,this.pageSize,this.sortDirection);
-    this.orgService.getProjectsList(params,).subscribe(res => {
+    this.projectService.getProjectsList(params,).subscribe(res => {
     this.projectsList = res['content']['data'];
     this.pageInfo= res['content']['pageInfo'];
     this.paginator.pageSize=this.pageInfo.pageSize;
     this.paginator.pageIndex=this.pageInfo.pageNumber;
     this.paginator.length=this.pageInfo.totalResults;
+
+    console.log(this.projectsList)
   
   });
   }
@@ -122,6 +134,13 @@ export class ProjectComponent {
     });
   }
 
+  getOrganizations(){
+    this.orgService.getAllOrganizationsList().subscribe(res=>{
+      this.orgsList= res['content'];
+    });
+  }
+  
+
   getProjectStatuses(){
     this.statusService.getProjectStatusesList(null).subscribe(res=>{
       this.statusList= res['content'];
@@ -130,7 +149,7 @@ export class ProjectComponent {
 
   getProjectCategories(){
     this.projectCategoryService.getProjectCategoriesList(null).subscribe(res=>{
-      this.categories= res['content'];
+      this.categories= res['content']['data'];
     });
   }
 
@@ -145,29 +164,30 @@ export class ProjectComponent {
   save(){
     if(this.id==0){
      const project= new ProjectDTO(this.form.value);
+     console.log("Selectio type: "+this.form.value['selectionType'])
      console.log(JSON.stringify(project))
-  //   this.orgService.createProject(project).subscribe(res => {
-  //   this.notificationService.openSnackBar(res['message']);
+    this.projectService.createProject(project).subscribe(res => {
+    this.notificationService.openSnackBar(res['message']);
     
-  //   this.projectsList.unshift(res['content']);
-  //   this.paginator.pageSize= this.pageInfo.pageSize;
+    this.projectsList.unshift(res['content']);
+    this.paginator.pageSize= this.pageInfo.pageSize;
 
-  //   //this.projectsList.push(res['content']);
-  //   this.close();
+    //this.projectsList.push(res['content']);
+    this.close();
     
-  //   },
-  //   error => {
-  //     console.log(error)
-  //     this.notificationService.openSnackBar(error.error.message);
+    },
+    error => {
+      console.log(error)
+      this.notificationService.openSnackBar(error.error.message);
   
-  // }
-  //   );
+  }
+    );
   }
 
   if(this.id!==0){
     const project= new ProjectDTO(this.form.value);
    
-    this.orgService.updateProject(project,this.id).subscribe(res => {
+    this.projectService.updateProject(project,this.id).subscribe(res => {
 
     const index = this.projectsList.findIndex(x=>x.id==this.id);
     this.projectsList.splice(index,1,res['content']);
@@ -177,7 +197,7 @@ export class ProjectComponent {
   }
   }
 
-  delete(data:ProjectDTO){
+  delete(data:ProjectDataDTO){
     // let's call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
@@ -189,7 +209,7 @@ export class ProjectComponent {
     // listen to response
     dialogRef.afterClosed().subscribe(res => {
       if(res){
-        this.orgService.deleteProject(data.id).subscribe(res => {
+        this.projectService.deleteProject(data).subscribe(res => {
 
           const index = this.projectsList.findIndex(x=>x.id==data.id);
           this.projectsList.splice(index,1);

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { ProjectDataDTO } from './dto/project-data-dto';
 import { ProjectDTO } from './dto/project-dto';
 
 @Injectable({
@@ -34,8 +35,8 @@ export class ProjectService {
     return this.http.post(`${this.baseUrl}/project/update/${projectId}`,project);
   }
 
-deleteProject(projectId:number){
-    return this.http.post(`${this.baseUrl}/project/delete`,projectId);
+deleteProject(project:ProjectDataDTO){
+    return this.http.post(`${this.baseUrl}/project/delete`,project);
   }
 
   getProject(id:number): Observable<ProjectDTO>{

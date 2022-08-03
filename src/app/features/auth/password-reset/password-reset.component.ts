@@ -46,30 +46,30 @@ export class PasswordResetComponent implements OnInit {
     });
   }
 
-  resetPassword() {
+   resetPassword() {
 
-    const password = this.form.get('newPassword')?.value;
-    const passwordConfirm = this.form.get('newPasswordConfirm')?.value;
+  //   const password = this.form.get('newPassword')?.value;
+  //   const passwordConfirm = this.form.get('newPasswordConfirm')?.value;
 
-    if (password !== passwordConfirm) {
-      this.notificationService.openSnackBar('Passwords do not match');
-      return;
-    }
+  //   if (password !== passwordConfirm) {
+  //     this.notificationService.openSnackBar('Passwords do not match');
+  //     return;
+  //   }
 
-    this.loading = true;
+  //   this.loading = true;
 
-    this.authService.passwordReset(this.email, this.token, password, passwordConfirm)
-      .subscribe(
-        () => {
-          this.notificationService.openSnackBar('Your password has been changed.');
-          this.router.navigate(['/auth/login']);
-        },
-        (error: any) => {
-          this.notificationService.openSnackBar(error.error);
-          this.loading = false;
-        }
-      );
-  }
+  //   this.authService.passwordReset(this.email, this.token, password, passwordConfirm)
+  //     .subscribe(
+  //       () => {
+  //         this.notificationService.openSnackBar('Your password has been changed.');
+  //         this.router.navigate(['/auth/login']);
+  //       },
+  //       (error: any) => {
+  //         this.notificationService.openSnackBar(error.error);
+  //         this.loading = false;
+  //       }
+  //     );
+   }
 
   cancel() {
     this.router.navigate(['/']);
