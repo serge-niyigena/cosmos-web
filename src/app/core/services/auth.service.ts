@@ -49,7 +49,7 @@ export class AuthenticationService {
     logout(){
         localStorage.removeItem('currentUser');
                this.currentUserSubject.next(new CurrentUser());
-               //this.router.navigate(['/']);
+               this.router.navigate(['/auth/login']);
                this.notificationService.openSnackBar("Logged out"); 
     }
   

@@ -62,7 +62,7 @@ export class ItemCategoryComponent implements OnInit {
 
   openDialog(data:any) {
     this.initiateForm();
-    console.log(data)
+  
     if(data!=null){
     this.id=data.id;
     this.update(data);
@@ -110,7 +110,7 @@ export class ItemCategoryComponent implements OnInit {
     
     },
     error => {
-      console.log(error)
+     
       this.notificationService.openSnackBar(error.error.message);
   
   }

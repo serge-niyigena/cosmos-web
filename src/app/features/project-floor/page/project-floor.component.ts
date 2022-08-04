@@ -17,6 +17,8 @@ import { ProjectStatusDTO } from '../../project-status/dto/project-status-dto';
 import { ProjectFloorService } from '../project-floor.service';
 import { ProjectStatusService } from '../../project-status/project-status.service';
 import { ProjectService } from '../../project/project.service';
+import { AuthenticationService } from 'src/app/core/services/auth.service';
+import { UserModelDTO } from 'src/app/core/dtos/user-model-dto';
 
 @Component({
   selector: 'app-customer-list',
@@ -41,6 +43,8 @@ export class ProjectFloorFloorComponent implements OnInit {
   projectId:number=0;
   pageInfo:PageInfo;
 
+  userModel:UserModelDTO;
+
   projectFloorsList:ProjectFloorData[];
   projectsList:ProjectDataDTO[];
   statusList:ProjectStatusDTO[]
@@ -49,8 +53,12 @@ export class ProjectFloorFloorComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private logger: NGXLogger,private notificationService: NotificationService,
     private titleService: Title,private projectFloorService:ProjectFloorService,
-    private statusService:ProjectStatusService,private dialog: MatDialog,private projectService:ProjectService
-  ) { }
+    private statusService:ProjectStatusService,private dialog: MatDialog,
+    private projectService:ProjectService,private authService:AuthenticationService
+  ) { authService.currentUser.subscribe(data=>{
+    const jwtDecoded: {}  = JSON.parse(atob(data.content['token'].split(".")[1]));
+    this.userModel=new UserModelDTO(jwtDecoded);
+  }) }
  
 
   ngOnInit(): void {
@@ -122,11 +130,32 @@ export class ProjectFloorFloorComponent implements OnInit {
   }
 
   getProjects(){
-    this.projFilter="users.projectUserUsers.idEQ1"
-    const params= Utilities.getRequestParams(this.projFilter,0,100,this.sortDirection);
-    this.projectService.getProjectsList(params).subscribe(res=>{
-      this.projectsList= res['content']['data'];
-    });
+   let projFilter="users.projectUserUsers.idEQ"+this.userModel.userId;
+
+
+
+    if(!this.userModel.userOrg.name.includes("osmos") && this.userModel.userGroups.filter(x=>{x.name.includes("admin")})){
+      projFilter="projectOrganization.idEQ"+this.userModel.userOrg.id;
+      const params= Utilities.getRequestParams(projFilter,this.page,this.pageSize,this.sortDirection);
+      this.projectService.getProjectsList(params).subscribe(res=>{
+        this.projectsList= res['content']['data'];
+      });
+    }
+    if(this.userModel.userOrg.name.includes("osmos")){
+      projFilter="";
+      const params= Utilities.getRequestParams(projFilter,this.page,this.pageSize,this.sortDirection);
+      this.projectService.getProjectsList(params).subscribe(res=>{
+        this.projectsList= res['content']['data'];
+      });
+    }
+    else{
+      const params= Utilities.getRequestParams(projFilter,this.page,100,this.sortDirection);
+      this.projectService.getProjectsList(params).subscribe(res=>{
+        this.projectsList= res['content']['data'];
+      });
+    }
+
+   
   }
 
   getStatuses(){
@@ -147,7 +176,7 @@ export class ProjectFloorFloorComponent implements OnInit {
   save(){
     if(this.id==0){
      const projectFloor= new ProjectFloorDTO(this.form.value);
-     console.log("Data: "+JSON.stringify(projectFloor))
+   
     this.projectFloorService.createProjectFloor(projectFloor).subscribe(res => {
     this.notificationService.openSnackBar(res['message']);
     
@@ -159,7 +188,7 @@ export class ProjectFloorFloorComponent implements OnInit {
     
     },
     error => {
-      console.log(error)
+
       this.notificationService.openSnackBar(error.error.message);
   
   }

@@ -130,7 +130,7 @@ export class OrganizationComponent implements OnInit {
     
     },
     error => {
-      console.log(error)
+     
       this.notificationService.openSnackBar(error.error.message);
   
   }

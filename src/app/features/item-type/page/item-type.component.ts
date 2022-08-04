@@ -110,7 +110,7 @@ export class ItemTypeComponent implements OnInit {
     
     },
     error => {
-      console.log(error)
+      
       this.notificationService.openSnackBar(error.error.message);
   
   }

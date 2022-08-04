@@ -19,6 +19,7 @@ import { FloorItemData } from '../dto/floor-item-data';
 import { FloorItemDTO } from '../dto/floor-item-dto';
 import { Location } from '@angular/common';
 import { FloorItemService } from '../floor-item.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-floor-item',
@@ -53,7 +54,7 @@ export class FloorItemComponent implements OnInit {
   projectFLoor:any;
   projectFloorId:number;
 
-  constructor(private fb: FormBuilder,private location:Location,
+  constructor(private fb: FormBuilder,private location:Location,private router:Router,
     private logger: NGXLogger,private notificationService: NotificationService,
     private titleService: Title,private floorItemService:FloorItemService,private itemService:ItemService,
     private statusService:UsageStatusService,private dialog: MatDialog,private projectFloorService:ProjectFloorService
@@ -64,8 +65,10 @@ export class FloorItemComponent implements OnInit {
    this.projectFLoor=this.location.getState();
    this.projectFLoor = this.projectFLoor?.data
    if(this.projectFLoor?.id!=null){
-   
     this.searchParam="projectFloor.idEQ"+this.projectFLoor.id;
+   }
+   else{
+    this.router.navigate(['/project-floor']);
    }
     
     this.getPaginatedFloorItems();
@@ -82,7 +85,7 @@ export class FloorItemComponent implements OnInit {
         floorItemUsedQuantity:['', [Validators.required]],
         floorItemStatusReport:['', []],
         floorItemItemId:['', [Validators.required]],
-        floorItemProjectFloorId:['', [Validators.required]]
+        floorItemProjectFloorId:[this.projectFLoor.id, [Validators.required]]
     });
     }
 
@@ -143,8 +146,6 @@ updateUsedItem(data:FloorItemData) {
     this.paginator.pageSize=this.pageInfo.pageSize;
     this.paginator.pageIndex=this.pageInfo.pageNumber;
     this.paginator.length=this.pageInfo.totalResults;
-
-    console.log(this.floorItemsList)
   
   });
   }
@@ -179,7 +180,7 @@ updateUsedItem(data:FloorItemData) {
   save(){
     if(this.id==0){
      const floorItem= new FloorItemDTO(this.form.value);
-     console.log(JSON.stringify(floorItem))
+    
     this.floorItemService.createFloorItem(floorItem).subscribe(res => {
     this.notificationService.openSnackBar(res['message']);
     
@@ -191,7 +192,7 @@ updateUsedItem(data:FloorItemData) {
     
     },
     error => {
-      console.log(error)
+ 
       this.notificationService.openSnackBar(error.error.message);
   
   }
@@ -212,7 +213,6 @@ updateUsedItem(data:FloorItemData) {
   if(this.updateItemUsage){
    const floorItem= new FloorItemDTO(this.form.getRawValue());
   
-    console.log(floorItem)
     this.floorItemService.updateFloorItemUsage(this.id,floorItem).subscribe(res => {
 
     const index = this.floorItemsList.findIndex(x=>x.id==this.id);

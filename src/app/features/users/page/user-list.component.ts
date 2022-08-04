@@ -94,7 +94,6 @@ export class UserListComponent implements OnInit {
 
 
   update(data:UserDTO){
-    console.log(data.groups.map(x=>x.id))
   
     this.form.patchValue({
         userFullName: data.userFullName,
@@ -171,21 +170,21 @@ handlePageEvent(event: PageEvent): void {
   getProjects(){
     this.projectService.getAllProjects().subscribe(res=>{
       this.projectsList=res['content'];
-      console.log(this.projectsList)
+ 
     })
   }
 
   getOrganizations(){
     this.orgService.getOrganizationsList(null).subscribe(res=>{
       this.orgsList= res['content']['data'];
-      console.log(this.orgsList)
+  
     })
   }
 
   getUserTypes(){
     this.userTypeService.getUserTypesList().subscribe(res=>{
       this.userTypes= res['content'];
-      console.log(this.userTypes)
+ 
     });
   }
 
@@ -200,7 +199,7 @@ handlePageEvent(event: PageEvent): void {
   save(){
     if(this.id==0){
      const user= new UserSendDTO(this.form.value);
-     console.log(JSON.stringify(user))
+
     this.userService.createUser(user).subscribe(res => {
     this.notificationService.openSnackBar(res['message']);
     
@@ -212,7 +211,7 @@ handlePageEvent(event: PageEvent): void {
     
     },
     error => {
-      console.log(error)
+
       this.notificationService.openSnackBar(error.error.message);
   
   }

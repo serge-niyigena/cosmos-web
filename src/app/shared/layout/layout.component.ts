@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
  import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { SpinnerService } from '../../core/services/spinner.service';
 import { AuthGuard } from 'src/app/core/guards/auth.guard';
+import { UserModelDTO } from 'src/app/core/dtos/user-model-dto';
+import { GroupData } from 'src/app/features/group/dto/group-data';
 
 @Component({
     selector: 'app-layout',
@@ -19,6 +21,8 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     showSpinner: boolean = false;
     userName: string = "";
     isAdmin: boolean = false;
+    userModel:UserModelDTO;
+    userGroup:GroupData;
 
     private autoLogoutSubscription: Subscription = new Subscription;
 
@@ -32,19 +36,30 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         // tslint:disable-next-line: deprecation
         this.mobileQuery.addListener(this._mobileQueryListener);
+
+        this.authService.currentUser.subscribe(data=>{
+            if( data?.['content']!==undefined){
+               
+            const jwtDecoded: {}  = JSON.parse(atob(data?.content['token'].split(".")[1]));
+            this.userModel=new UserModelDTO(jwtDecoded);
+            }
+          }) 
     }
 
     ngOnInit(): void {
-        // const user = this.authService.getCurrentUser();
-
-        // this.isAdmin = user.isAdmin;
-        // this.userName = user.fullName;
+        this.userName= this.userModel.userName;
+       this.userModel.userGroups.filter(x=>{
+            if(x.name.includes("dmin")){
+                this.isAdmin=true;
+            }
+        });
+       
 
         // Auto log-out subscription
         const timer$ = timer(2000, 5000);
-        this.autoLogoutSubscription = timer$.subscribe(() => {
-            this.authGuard.canActivate();
-        });
+         this.autoLogoutSubscription = timer$.subscribe(() => {
+             this.authGuard.canActivate();
+         });
     }
 
     ngOnDestroy(): void {
@@ -57,8 +72,5 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
         this.changeDetectorRef.detectChanges();
     }
 
-    // const menuItems=[
-
-    // ];
 
 }

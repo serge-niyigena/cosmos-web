@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
     canActivate() {
         const user = this.authService.currentUserValue;
 
-        if (user && user.content['token']) {
+        if (user && user?.content['token']) {
 
           //  if (moment() < moment(user.expiration)) {
                 return true;

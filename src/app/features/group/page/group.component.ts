@@ -118,7 +118,7 @@ handlePageEvent(event: PageEvent): void {
   getAllRoles(){
     this.roleService.getAllRolesList().subscribe(res=>{
       this.roles= res['content'];
-      console.log(JSON.stringify(this.roles))
+  
     });
   }
 
@@ -133,7 +133,7 @@ handlePageEvent(event: PageEvent): void {
   save(){
     if(this.id==0){
      const group= new GroupDTO(this.form.value);
-     console.log(JSON.stringify(group))
+  
     this.groupService.createGroup(group).subscribe(res => {
     this.notificationService.openSnackBar(res['message']);
     
@@ -145,7 +145,7 @@ handlePageEvent(event: PageEvent): void {
     
     },
     error => {
-      console.log(error)
+
       this.notificationService.openSnackBar(error.error.message);
   
   }

@@ -149,7 +149,7 @@ handlePageEvent(event: PageEvent): void {
   save(){
     if(this.id==0){
      const item= new ItemDTO(this.form.value);
-     console.log(JSON.stringify(item))
+  
     this.itemService.createItem(item).subscribe(res => {
     this.notificationService.openSnackBar(res['message']);
     
@@ -161,7 +161,7 @@ handlePageEvent(event: PageEvent): void {
     
     },
     error => {
-      console.log(error)
+
       this.notificationService.openSnackBar(error.error.message);
   
   }

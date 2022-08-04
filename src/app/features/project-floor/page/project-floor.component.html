@@ -119,7 +119,7 @@
         <mat-dialog-content [formGroup]="form">
 
           <mat-form-field class="full-width">
-            <mat-label>Project</mat-label>
+            <mat-label>Project floors</mat-label>
             <mat-select formControlName="projectId">
              
               <mat-option *ngFor="let p of projectsList" [value]="p.id">{{p.name}}</mat-option>

@@ -105,7 +105,7 @@ export class UsageStatusComponent implements OnInit {
     
     },
     error => {
-      console.log(error)
+  
       this.notificationService.openSnackBar(error.error.message);
   
   }

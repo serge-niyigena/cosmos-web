@@ -110,7 +110,7 @@ export class UserTypeComponent implements OnInit {
     
     },
     error => {
-      console.log(error)
+   
       this.notificationService.openSnackBar(error.error.message);
   
   }
@@ -124,12 +124,12 @@ export class UserTypeComponent implements OnInit {
 
     const index = this.userTypesList.findIndex(x=>x.id==this.id);
     this.userTypesList.splice(index,1,res['content']);
-    console.log(res['content'])
+  
     this.notificationService.openSnackBar(res['message']);
     this.close();
     },
     error => {
-      console.log(error)
+
       this.notificationService.openSnackBar(error.error.message);
   
   }

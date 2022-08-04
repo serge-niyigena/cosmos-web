@@ -19,13 +19,13 @@ export class DashboardHomeComponent implements OnInit {
     private titleService: Title,
     private logger: NGXLogger) {
       this.authService.currentUser.subscribe(x=>{
-        if(x!=null){
-          console.log(x)
-        const jwtDecoded: {}  = JSON.parse(atob(x.content["token"].split(".")[1]));
+        if( x?.['content']!==undefined){
+ 
+        const jwtDecoded: {}  = JSON.parse(atob(x?.content["token"].split(".")[1]));
         this.userModel=jwtDecoded['userName'];
         }
       }); 
-      //this.uRoles= this.uRoleService.setRoles(this.userModel.userRoles);
+     
   }
 
   ngOnInit() {

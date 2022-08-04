@@ -4,6 +4,8 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 import { PageInfo } from 'src/app/core/dtos/page-info';
+import { UserModelDTO } from 'src/app/core/dtos/user-model-dto';
+import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { Utilities } from 'src/app/core/utilities';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
@@ -39,7 +41,7 @@ export class ProjectComponent {
   id:number=0;
   
   pageInfo:PageInfo;
-
+  userModel:UserModelDTO;
   projectsList:ProjectDataDTO[];
   usersList:UserDTO[];
   statusList:ProjectStatusDTO[];
@@ -48,7 +50,14 @@ export class ProjectComponent {
 
   constructor(private fb: FormBuilder,private projectService:ProjectService,private userService:UserService,
     private notificationService:NotificationService,private statusService:ProjectStatusService,
-     private dialog: MatDialog,private orgService:OrganizationService,private projectCategoryService:ProjectCategoryService) { }
+     private dialog: MatDialog,private orgService:OrganizationService,
+     private projectCategoryService:ProjectCategoryService,private authService:AuthenticationService) 
+     { 
+      authService.currentUser.subscribe(data=>{
+        const jwtDecoded: {}  = JSON.parse(atob(data.content['token'].split(".")[1]));
+        this.userModel=new UserModelDTO(jwtDecoded);
+      })
+     }
 
   ngOnInit(): void {
    
@@ -114,30 +123,59 @@ handlePageEvent(event: PageEvent): void {
 
 
   private getPaginatedProjects(){
-
-    const params=Utilities.getRequestParams(this.searchValue,this.page,this.pageSize,this.sortDirection);
-    this.projectService.getProjectsList(params,).subscribe(res => {
+    let filter="users.projectUserUsers.idEQ"+this.userModel.userId;
+    if(!this.userModel.userOrg.name.includes("osmos") && this.userModel.userGroups.filter(x=>{x.name.includes("admin")})){
+      filter="projectOrganization.idEQ"+this.userModel.userOrg.id;
+    }
+    if(this.userModel.userOrg.name.includes("osmos")){
+      filter="";
+    }
+    
+    const params=Utilities.getRequestParams(filter,this.page,this.pageSize,this.sortDirection);
+    this.projectService.getProjectsList(params).subscribe(res => {
     this.projectsList = res['content']['data'];
     this.pageInfo= res['content']['pageInfo'];
     this.paginator.pageSize=this.pageInfo.pageSize;
     this.paginator.pageIndex=this.pageInfo.pageNumber;
     this.paginator.length=this.pageInfo.totalResults;
 
-    console.log(this.projectsList)
   
   });
   }
 
   getAllprojectUsers(){
-    this.userService.getAllUsersList().subscribe(res=>{
-      this.usersList= res['content'];
-    });
+    let filter="userOrg.idEQ"+this.userModel.userOrg.id;
+  
+    if(!this.userModel.userOrg.name.includes("osmos")){
+      const params=Utilities.getRequestParams(filter,this.page,200,this.sortDirection);
+      this.userService.getUsersList(params).subscribe(res=>{
+        this.usersList= res['content']['data'];
+      });
+    }
+
+    if(this.userModel.userOrg.name.includes("osmos")){
+     
+      this.userService.getAllUsersList().subscribe(res=>{
+        this.usersList= res['content'];
+      });
+    }
+   
   }
 
   getOrganizations(){
-    this.orgService.getAllOrganizationsList().subscribe(res=>{
-      this.orgsList= res['content'];
-    });
+    if(this.userModel.userOrg.name.includes("osmos")){
+      this.orgService.getAllOrganizationsList().subscribe(res=>{
+        this.orgsList= res['content'];
+      });
+    }
+    else{
+      let filter="idEQ"+this.userModel.userOrg.id;
+      const params=Utilities.getRequestParams(filter,this.page,this.pageSize,this.sortDirection);
+      this.orgService.getOrganizationsList(params).subscribe(res=>{
+        this.orgsList= res['content']['data'];
+      });
+    }
+   
   }
   
 
@@ -164,8 +202,7 @@ handlePageEvent(event: PageEvent): void {
   save(){
     if(this.id==0){
      const project= new ProjectDTO(this.form.value);
-     console.log("Selectio type: "+this.form.value['selectionType'])
-     console.log(JSON.stringify(project))
+     
     this.projectService.createProject(project).subscribe(res => {
     this.notificationService.openSnackBar(res['message']);
     
@@ -177,7 +214,7 @@ handlePageEvent(event: PageEvent): void {
     
     },
     error => {
-      console.log(error)
+
       this.notificationService.openSnackBar(error.error.message);
   
   }
