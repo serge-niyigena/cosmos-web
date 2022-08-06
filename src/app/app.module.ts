@@ -11,6 +11,7 @@ import { LoggerModule } from 'ngx-logger';
 import { environment } from '../environments/environment';
 import { ItemComponent } from './features/item/page/item.component';
 import { FloorItemComponent } from './features/floor-item/page/floor-item.component';
+import { DamagedItemComponent } from './features/damaged-items/page/damaged-item.component';
 
 @NgModule({
   declarations: [

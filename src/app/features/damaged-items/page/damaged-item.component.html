@@ -1,0 +1,173 @@
+<div class="container" fxLayout="row" fxLayoutAlign="center none">
+    <div fxFlex="95%">
+  
+      <mat-card>
+        <mat-card-content>
+          <h2>Damaged items</h2>
+  
+          <div class="container">
+  
+          
+            <div class="row" fxLayoutGap="20px" >
+                <div class="col-md-4" id="filter">
+                 <mat-form-field >
+                   <mat-label>Filter by project</mat-label>
+                   <mat-select [(ngModel)]="projectId" (selectionChange)="getProjectFloors()">
+                    
+                     <mat-option *ngFor="let p of projectsList" [value]="p.id">{{p.name}}</mat-option>
+                   </mat-select>
+                 
+                 </mat-form-field>
+                </div>
+
+                <div class="col-md-4" id="filterCenter">
+                    <mat-form-field >
+                      <mat-label>Filter by floor</mat-label>
+                      <mat-select [(ngModel)]="floorId" (selectionChange)="getFloorItems()">
+                       
+                        <mat-option *ngFor="let p of projectFloorsList" [value]="p.id">{{p.floorValue}}</mat-option>
+                      </mat-select>
+                    
+                    </mat-form-field>
+                   </div>
+                   <div class="col-md-4" id="search">
+                   <button *ngIf="floorItems!==undefined && floorItems.length>0" mat-flat-button color="primary" class="createBtn" (click)="openDialog(null)">Create<mat-icon>add</mat-icon></button>
+                  </div>
+               </div>
+               
+  
+            <table mat-table [dataSource]="damagedItemsList" #myTable class="my-table mat-elevation-z8">
+  
+              <!-- Position Column -->
+              <ng-container matColumnDef="item">
+                <th mat-header-cell *matHeaderCellDef> Item </th>
+                <td mat-cell *matCellDef="let element"> {{element.floorItem.floorItemItem.name}} </td>
+              </ng-container>
+  
+  
+              <ng-container matColumnDef="floor">
+                <th mat-header-cell *matHeaderCellDef> Floor </th>
+                <td mat-cell *matCellDef="let element"> {{element.floorItem.projectFloor.floorValue}} </td>
+              </ng-container>
+  
+  
+              <ng-container matColumnDef="project">
+                <th mat-header-cell *matHeaderCellDef> Project </th>
+                <td mat-cell *matCellDef="let element"> {{element.floorItem.projectFloor.floorProject.name}} </td>
+              </ng-container>
+  
+  
+              <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef> Damaged quantity </th>
+                <td mat-cell *matCellDef="let element"> {{element.damagedQuantity}} </td>
+              </ng-container>
+  
+              <!-- Weight Column -->
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Damaged date </th>
+                <td mat-cell *matCellDef="let element"> {{element.damagedDate}} </td>
+              </ng-container>
+  
+              <!-- Weight Column -->
+              <ng-container matColumnDef="desc">
+                <th mat-header-cell *matHeaderCellDef> Damaged description </th>
+                <td mat-cell *matCellDef="let element"> {{element.damagedDesc}} </td>
+              </ng-container>
+  
+           
+  
+              <!-- Action Column-->
+              <ng-container matColumnDef="action" class="text-center">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td  mat-cell *matCellDef="let element">
+                  <button *ngIf="floorItems!==undefined && floorItems.length>0" mat-icon-button matTooltip="Click to Edit" (click)="openDialog(element)" class="iconbutton"
+                    color="accent">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  
+  
+                  <button *ngIf="floorItems!==undefined && floorItems.length>0" mat-icon-button matTooltip="Click to delete" (click)="delete(element)" class="iconbutton"
+                    color="warn">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+  
+  
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+  
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" 
+            (page)="handlePageEvent($event)"
+            showFirstLastButtons
+              aria-label="Select page of periodic elements">
+            </mat-paginator>
+          </div>
+  
+          <ng-template #damagedModal>
+            <h2 mat-dialog-title class="text-center">Damaged item</h2>
+  
+            <mat-dialog-content [formGroup]="form">
+  
+              <mat-form-field class="full-width" >
+                <mat-label>Floor item</mat-label>
+                <mat-select  formControlName="damagedFloorItemId">
+  
+                  <mat-option  *ngFor="let fi of floorItems" [value]="fi.id">{{fi.floorItemItem.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.controls['damagedFloorItemId'].hasError('required')">
+                  Floor item
+                  <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+  
+              <mat-form-field class="full-width">
+  
+                <input matInput placeholder="Quantity damaged" formControlName="damagedQuantity"
+                  autocomplete="name" type="number">
+                <mat-error *ngIf="form.controls['damagedQuantity'].hasError('required')">
+                 quantity is
+                  <strong>required</strong>
+                </mat-error>
+  
+              </mat-form-field>
+
+              <mat-form-field class="full-width">
+  
+                <input matInput placeholder="Date of damage" formControlName="damagedDate"
+                  type="date">
+                <mat-error *ngIf="form.controls['damagedDate'].hasError('required')">
+                  Date is
+                  <strong>required</strong>
+                </mat-error>
+  
+              </mat-form-field>
+
+              <mat-form-field class="full-width">
+  
+                <input matInput placeholder="Description" formControlName="damagedDesc"
+                  type="text">
+                <mat-error *ngIf="form.controls['damagedDesc'].hasError('required')">
+                  Description is
+                  <strong>required</strong>
+                </mat-error>
+  
+              </mat-form-field>
+
+  
+            </mat-dialog-content>
+  
+            <mat-dialog-actions fxLayout="row" fxLayoutGap="10Px" fxLayoutAlign="flex-end">
+              <button class="mat-raised-button mat-accent" (click)="close()">Close</button>
+              <button class="mat-raised-button mat-primary" (click)="save()" [disabled]="(form.invalid)">Save</button>
+            </mat-dialog-actions>
+  
+          </ng-template>
+  
+  
+        </mat-card-content>
+      </mat-card>
+  
+    </div>
+  </div>

@@ -24,6 +24,11 @@ const appRoutes: Routes = [
     loadChildren: () => import('./features/floor-item/module/floor-item.module').then(m => m.FloorItemModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'damaged-item',
+    loadChildren: () => import('./features/damaged-items/module/damaged.module').then(m => m.DamagedModule),
+    canActivate: [AuthGuard]
+  },
 
   {
     path: 'item',

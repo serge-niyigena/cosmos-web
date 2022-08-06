@@ -90,6 +90,13 @@
           <p mat-line> Items </p>
         </a>
 
+        <a mat-list-item [routerLink]="['/damaged-item']" routerLinkActive="active">
+          <mat-icon mat-list-icon>
+            item
+          </mat-icon>
+          <p mat-line> Damaged items </p>
+        </a>
+
 
         <mat-expansion-panel [class.mat-elevation-z0]="true"  *ngIf="isAdmin" dense>
           <mat-expansion-panel-header>
