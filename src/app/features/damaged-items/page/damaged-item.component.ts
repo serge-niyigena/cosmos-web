@@ -33,11 +33,10 @@ import { DamagedDTO } from '../dto/damaged-dto';
 })
 export class DamagedItemComponent implements OnInit {
 
-  displayedColumns: string[] = ['item', 'floor','project','quantity','date','desc','action'];
+  displayedColumns:string[]=['item', 'floor','project','quantity','date','desc'];
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('damagedModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
   userModel:UserModelDTO;
   form: FormGroup;
   searchValue:string="";
@@ -177,6 +176,11 @@ export class DamagedItemComponent implements OnInit {
      const params= Utilities.getRequestParams(filter,this.page,400,this.sortDirection)
      this.floorItemService.getFloorItemsList(params).subscribe(res=>{
        this.floorItems= res['content']['data'];
+    
+       if(this.floorItems!==undefined && this.floorItems.length>0){
+        this.displayedColumns=['item', 'floor','project','quantity','date','desc','action'];
+
+       }
      });
    }
  
@@ -213,7 +217,7 @@ export class DamagedItemComponent implements OnInit {
 
   if(this.id!==0 ){
     const damagedItem= new DamagedDTO(this.form.value);
-   console.log("Id: "+this.id)
+  
     this.damagedItemService.updateDamagedItem(damagedItem,this.id).subscribe(res => {
 
     const index = this.damagedItemsList.findIndex(x=>x.damagedId==this.id);

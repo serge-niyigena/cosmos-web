@@ -20,6 +20,10 @@ import { FloorItemDTO } from '../dto/floor-item-dto';
 import { Location } from '@angular/common';
 import { FloorItemService } from '../floor-item.service';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/core/services/auth.service';
+import { UserModelDTO } from 'src/app/core/dtos/user-model-dto';
+import { ProjectDataDTO } from '../../project/dto/project-data-dto';
+import { ProjectService } from '../../project/project.service';
 
 @Component({
   selector: 'app-floor-item',
@@ -33,7 +37,7 @@ export class FloorItemComponent implements OnInit {
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('orgModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
+  userModel:UserModelDTO;
   form: FormGroup;
   searchValue:string="";
   searchParam:string="";
@@ -42,10 +46,13 @@ export class FloorItemComponent implements OnInit {
   sortDirection:string="desc";
   id:number=0;
 
+  projectId:number=0;
+  floorId:number=0;
   updateItemUsage : boolean=false;
   
   pageInfo:PageInfo;
 
+  projectsList:ProjectDataDTO[];
   floorItemsList:FloorItemData[];
   projectFloorsList:ProjectFloorData[];
   itemsList:ItemData[];
@@ -57,24 +64,44 @@ export class FloorItemComponent implements OnInit {
   constructor(private fb: FormBuilder,private location:Location,private router:Router,
     private logger: NGXLogger,private notificationService: NotificationService,
     private titleService: Title,private floorItemService:FloorItemService,private itemService:ItemService,
-    private statusService:UsageStatusService,private dialog: MatDialog,private projectFloorService:ProjectFloorService
-  ) { }
+    private statusService:UsageStatusService,private dialog: MatDialog,private projectService:ProjectService,
+    private projectFloorService:ProjectFloorService, private authService:AuthenticationService
+  ) { 
+    this.authService.currentUser.subscribe(data=>{
+      if( data?.['content']!==undefined){
+      const jwtDecoded: {}  = JSON.parse(atob(data.content['token'].split(".")[1]));
+      this.userModel=new UserModelDTO(jwtDecoded);
+      }
+    }) 
+  }
  
 
   ngOnInit(): void {
    this.projectFLoor=this.location.getState();
    this.projectFLoor = this.projectFLoor?.data
+
    if(this.projectFLoor?.id!=null){
-    this.searchParam="projectFloor.idEQ"+this.projectFLoor.id;
+    this.projectId= this.projectFLoor.floorProject.id;
+    this.floorId=this.projectFLoor.id;
+    this.searchParam="projectFloor.idEQ"+this.floorId;
+    this.getProjectFloors();
+    this.getPaginatedFloorItems();
    }
-   else{
-    this.router.navigate(['/project-floor']);
-   }
-    
+    this.getProjects();
+    this.getStatuses();
+    this.getAllItems();
+  }
+
+  filterByProject(){
+    this.searchParam="projectFloor.projectFloorProject.idEQ"+this.projectId;
     this.getPaginatedFloorItems();
     this.getProjectFloors();
-    this.getStatuses();
-    this.getAllItems()
+  }
+
+  filterByFloor(){
+    this.searchParam="projectFloor.idEQ"+this.floorId;
+    this.getPaginatedFloorItems();
+    this.getProjectFloors();
   }
 
 
@@ -85,7 +112,7 @@ export class FloorItemComponent implements OnInit {
         floorItemUsedQuantity:['', [Validators.required]],
         floorItemStatusReport:['', []],
         floorItemItemId:['', [Validators.required]],
-        floorItemProjectFloorId:[this.projectFLoor.id, [Validators.required]]
+        floorItemProjectFloorId:['', [Validators.required]]
     });
     }
 
@@ -137,7 +164,7 @@ updateUsedItem(data:FloorItemData) {
 }
 
 
-  private getPaginatedFloorItems(){
+  public getPaginatedFloorItems(){
 
     const params=Utilities.getRequestParams(this.searchParam,this.page,this.pageSize,this.sortDirection);
     this.floorItemService.getFloorItemsList(params).subscribe(res => {
@@ -150,10 +177,46 @@ updateUsedItem(data:FloorItemData) {
   });
   }
 
+  getProjects(){
+    let projectFIlter="users.projectUserUsers.idEQ"+this.userModel.userId
+
+    //users not from main organization
+    if(!this.userModel.userOrg.name.includes("osmos") && this.userModel.userGroups.filter(x=>{x.name.includes("admin")})){
+      projectFIlter="projectOrganization.idEQ"+this.userModel.userOrg.id;
+      const params= Utilities.getRequestParams(projectFIlter,this.page,this.pageSize,this.sortDirection);
+      this.projectService.getProjectsList(params).subscribe(res=>{
+        this.projectsList= res['content']['data'];
+      });
+    }
+
+    //usrs from main organization
+    if(this.userModel.userOrg.name.includes("osmos")){
+      projectFIlter="";
+      const params= Utilities.getRequestParams(projectFIlter,this.page,this.pageSize,this.sortDirection);
+      this.projectService.getProjectsList(params).subscribe(res=>{
+        this.projectsList= res['content']['data'];
+      });
+    }
+
+    //other users
+    else{
+      const params= Utilities.getRequestParams(projectFIlter,this.page,100,this.sortDirection);
+      this.projectService.getProjectsList(params).subscribe(res=>{
+        this.projectsList= res['content']['data'];
+      });
+    }
+
+  }
+  
   getProjectFloors(){
-    this.projectFloorService.getProjectFloorsList(null).subscribe(res=>{
+    if(this.projectId!=0){
+    const floorFIlter="projectFloorProject.idEQ"+this.projectId
+    const params= Utilities.getRequestParams(floorFIlter,this.page,this.pageSize,this.sortDirection);
+    this.projectFloorService.getProjectFloorsList(params).subscribe(res=>{
       this.projectFloorsList= res['content']['data'];
     });
+   }
+   
   }
 
   getAllItems(){this.itemService.getAllItemsList().subscribe(res=>{
@@ -187,7 +250,6 @@ updateUsedItem(data:FloorItemData) {
     this.floorItemsList.unshift(res['content']);
     this.paginator.pageSize= this.pageInfo.pageSize;
 
-    //this.floorItemsList.push(res['content']);
     this.close();
     
     },

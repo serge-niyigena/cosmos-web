@@ -10,8 +10,35 @@
         </a>
 
         <div class="container">
+          
+          <div class="row" fxLayoutGap="20px" >
+            <div class="col-md-4" id="filter">
+             <mat-form-field >
+               <mat-label>Filter by project</mat-label>
+               <mat-select [(ngModel)]="projectId" (selectionChange)="filterByProject()">
+                
+                 <mat-option *ngFor="let p of projectsList" [value]="p.id">{{p.name}}</mat-option>
+               </mat-select>
+             
+             </mat-form-field>
+            </div>
 
-          <div class="mt10 pl10 pr9" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="flex-end">
+            <div class="col-md-4" id="filterCenter">
+                <mat-form-field >
+                  <mat-label>Filter by floor</mat-label>
+                  <mat-select [(ngModel)]="floorId" (selectionChange)="filterByFloor()">
+                   
+                    <mat-option *ngFor="let p of projectFloorsList" [value]="p.id">{{p.floorValue}}</mat-option>
+                  </mat-select>
+                
+                </mat-form-field>
+               </div>
+               <div class="col-md-4" id="search">
+               <button *ngIf="floorItemsList!==undefined && floorItemsList.length>0" mat-flat-button color="primary" class="createBtn" (click)="openDialog(null)">Create<mat-icon>add</mat-icon></button>
+              </div>
+           </div>
+
+          <!-- <div class="mt10 pl10 pr9" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="flex-end">
 
             <mat-form-field>
               <mat-placeholder>Search</mat-placeholder>
@@ -23,7 +50,7 @@
             <button mat-flat-button color="primary" class="createBtn" (click)="openDialog(null)">Create<mat-icon>add
               </mat-icon></button>
 
-          </div>
+          </div> -->
 
           <table mat-table [dataSource]="floorItemsList" #myTable class="my-table mat-elevation-z8">
 

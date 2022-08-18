@@ -202,7 +202,7 @@
                 <mat-label>Project users</mat-label>
                 <mat-select formControlName="usersIds" multiple>
                  
-                  <mat-option *ngFor="let u of usersList" [value]="u.id">{{u.userFullName}}</mat-option>
+                  <mat-option *ngFor="let u of usersList" [value]="u.id">{{u.userFullName+" - "+u.userType.name}}</mat-option>
                 </mat-select>
               
               </mat-form-field>

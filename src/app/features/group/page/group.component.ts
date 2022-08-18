@@ -4,6 +4,8 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 import { PageInfo } from 'src/app/core/dtos/page-info';
+import { UserModelDTO } from 'src/app/core/dtos/user-model-dto';
+import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { Utilities } from 'src/app/core/utilities';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
@@ -27,7 +29,7 @@ export class GroupComponent implements OnInit {
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('groupModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
+  userModel:UserModelDTO;
   form: FormGroup;
   searchValue:string;
   page:number=0;
@@ -43,7 +45,14 @@ export class GroupComponent implements OnInit {
 
   constructor(private fb: FormBuilder,private userService :UserService,private roleService:RoleService,
     private notificationService:NotificationService,private groupService:GroupService,
-     private dialog: MatDialog,) { }
+     private dialog: MatDialog,private authService:AuthenticationService) {
+      this.authService.currentUser.subscribe(data=>{
+        if( data?.['content']!==undefined){
+        const jwtDecoded: {}  = JSON.parse(atob(data.content['token'].split(".")[1]));
+        this.userModel=new UserModelDTO(jwtDecoded);
+        }
+      }) 
+      }
 
   ngOnInit(): void {
    
@@ -110,9 +119,18 @@ handlePageEvent(event: PageEvent): void {
   }
 
   getAllUsers(){
-    this.userService.getAllUsersList().subscribe(res=>{
-      this.usersList= res['content'];
-    });
+    let filter=null;
+    if(this.userModel.userOrg.name.includes("osmos")){
+      filter="";
+    }
+    else{
+      filter="users.eUsers.userOrg.idEQ"+this.userModel.userOrg.id;
+    }
+    const params= Utilities.getRequestParams(filter,this.page,500,this.sortDirection);
+    this.userService.getUsersList(params).subscribe(res=>{
+    this.usersList= res['content']['data'];
+  
+  });
   }
 
   getAllRoles(){

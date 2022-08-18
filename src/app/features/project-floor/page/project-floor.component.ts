@@ -42,9 +42,7 @@ export class ProjectFloorFloorComponent implements OnInit {
   pFloorFilter:string="";
   projectId:number=0;
   pageInfo:PageInfo;
-
   userModel:UserModelDTO;
-
   projectFloorsList:ProjectFloorData[];
   projectsList:ProjectDataDTO[];
   statusList:ProjectStatusDTO[]

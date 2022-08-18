@@ -147,17 +147,20 @@ handlePageEvent(event: PageEvent): void {
     let filter="userOrg.idEQ"+this.userModel.userOrg.id;
   
     if(!this.userModel.userOrg.name.includes("osmos")){
-      const params=Utilities.getRequestParams(filter,this.page,200,this.sortDirection);
+      const params=Utilities.getRequestParams(filter,this.page,1000,this.sortDirection);
       this.userService.getUsersList(params).subscribe(res=>{
         this.usersList= res['content']['data'];
       });
     }
 
     if(this.userModel.userOrg.name.includes("osmos")){
-     
-      this.userService.getAllUsersList().subscribe(res=>{
-        this.usersList= res['content'];
-      });
+    
+      filter="users.eUsers.userOrg.idEQ"+this.userModel.userOrg.id; 
+      const params= Utilities.getRequestParams(filter,this.page,500,this.sortDirection);
+      this.userService.getUsersList(params).subscribe(res=>{
+      this.usersList= res['content']['data'];
+   
+    });
     }
    
   }

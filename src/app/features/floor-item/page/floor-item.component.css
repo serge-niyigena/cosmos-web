@@ -1,0 +1,18 @@
+#filter {
+    float:left;
+    width:25%;
+    
+}
+
+#filterCenter {
+    float:center;
+    width:50%;
+    display: unset;
+    
+}
+
+#search {
+    float:right;
+    width:25%;
+    
+}
