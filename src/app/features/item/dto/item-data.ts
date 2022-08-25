@@ -6,6 +6,7 @@ export class ItemData {
     id:number;
     name:string;
     desc:string;
+    make:string;
     itemCategory:ItemCategoryDTO
     itemUnitType:UnitTypeDTO;
     itemType:ItemTypeDTO;

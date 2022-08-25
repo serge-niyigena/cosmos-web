@@ -28,6 +28,12 @@
                   <th mat-header-cell *matHeaderCellDef> Name </th>
                   <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                 </ng-container>
+
+                 <!-- Position Column -->
+                 <ng-container matColumnDef="make">
+                  <th mat-header-cell *matHeaderCellDef> Make </th>
+                  <td mat-cell *matCellDef="let element"> {{element.make}} </td>
+                </ng-container>
             
                 <!-- Name Column -->
                 <ng-container matColumnDef="desc">
@@ -91,6 +97,17 @@
               type="text">
               <mat-error  *ngIf="form.controls['name'].hasError('required')">
                 Name is
+                <strong>required</strong>
+            </mat-error>
+                      
+            </mat-form-field>
+
+            <mat-form-field class="full-width">
+                
+              <input id="nameInput" matInput placeholder="Make" formControlName="make" autocomplete="name"
+              type="text">
+              <mat-error  *ngIf="form.controls['make'].hasError('required')">
+                Make is
                 <strong>required</strong>
             </mat-error>
                       

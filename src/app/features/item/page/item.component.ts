@@ -30,7 +30,7 @@ export class ItemComponent implements OnInit {
 
  
  
-  displayedColumns: string[] = ['name', 'desc','type','category','unit','action'];
+  displayedColumns: string[] = ['name','make', 'desc','type','category','unit','action'];
   @ViewChild('myTable') myTable: MatTable<any>; 
   @ViewChild('itemModal') customTemplate: TemplateRef<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -63,6 +63,7 @@ export class ItemComponent implements OnInit {
   initiateForm(){
       this.form = this.fb.group({
         name: ['', [Validators.required]],
+        make: ['', [Validators.required]],
         desc: ['', [Validators.required]],
         itemCategoryId: ['', [Validators.required]],
         itemUnitTypeId: ['', [Validators.required]],
@@ -75,6 +76,7 @@ export class ItemComponent implements OnInit {
   
     this.form.patchValue({
       name: data.name,
+      make: data.make,
       desc: data.desc,
       itemCategoryId: data.itemCategory.id,
       itemUnitTypeId: data.itemUnitType.id,
